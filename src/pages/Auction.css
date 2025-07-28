@@ -1,0 +1,523 @@
+.auction-page {
+  width: 100vw;
+  height: 100vh;
+  background-color: #000015;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.auction-content {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  overflow: hidden;
+  padding: 0 20px;
+}
+
+.auction-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 120px 0 0;
+  max-width: 1000px;
+}
+
+/* Таймер */
+.auction-timer {
+  font-size: 64px;
+  font-weight: 600;
+  font-family: 'Moscow2024', sans-serif;
+  background: linear-gradient(45deg, #00CAF1, #C177FF, #00CAF1);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 3s ease-in-out infinite;
+  margin-bottom: 40px;
+}
+
+.auction-timer.blinking {
+  animation: gradientShift 3s ease-in-out infinite, blink 1s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0.3;
+  }
+}
+
+/* Информация о лоте */
+.lot-info {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.lot-title {
+  font-size: 48px;
+  font-weight: 600;
+  color: #FFFFFF;
+  font-family: 'Montserrat', sans-serif;
+  margin-bottom: 16px;
+}
+
+.lot-price {
+  font-size: 32px;
+  font-weight: 500;
+  color: #00CAF1;
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* Бюджет и текущая ставка */
+.bid-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  width: 100%;
+  max-width: 800px;
+  margin-bottom: 40px;
+}
+
+.budget-box,
+.current-bid-box {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 24px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.budget-box::before,
+.current-bid-box::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  background-size: 200% 200%;
+  border-radius: 19px;
+  z-index: -1;
+  animation: borderGradient 3s ease-in-out infinite;
+  box-shadow: 
+    0 0 20px rgba(0, 202, 241, 0.3),
+    0 0 40px rgba(193, 119, 255, 0.2);
+}
+
+.info-label {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  color: #FFFFFF;
+  margin-bottom: 12px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.info-value {
+  font-size: 32px;
+  font-weight: 600;
+  background: linear-gradient(45deg, #00CAF1, #C177FF, #00CAF1);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 3s ease-in-out infinite;
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* Кнопка увеличения ставки */
+.increase-bid-button {
+  background: linear-gradient(135deg, #00CAF1, #C177FF);
+  border: 1px solid #C177FF;
+  border-radius: 12px;
+  padding: 20px 40px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  font-family: 'Montserrat', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.increase-bid-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 202, 241, 0.4);
+}
+
+.increase-bid-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.increase-bid-button svg {
+  transition: transform 0.3s ease;
+}
+
+.increase-bid-button:hover:not(:disabled) svg {
+  transform: translateY(-2px);
+}
+
+/* Визуализация участников */
+.participants-visualization {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 60px;
+  width: 100%;
+  max-width: 800px;
+  margin-top: auto;
+  padding-bottom: 40px;
+  height: 900px;
+}
+
+.participant-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.bar-container {
+  width: 270px;
+  height: 800px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  position: relative;
+}
+
+.bar-value {
+  font-size: 18px;
+  font-weight: 500;
+  color: #FFFFFF;
+  font-family: 'Montserrat', sans-serif;
+  text-align: center;
+}
+
+.bar {
+  width: 100%;
+  min-height: 20px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+  animation: barAppear 0.8s ease-out;
+}
+
+.user-bar {
+  background: linear-gradient(45deg, #00CAF1, #C177FF, #00CAF1);
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease-in-out infinite, barAppear 0.8s ease-out;
+  box-shadow: 
+    0 0 20px rgba(0, 202, 241, 0.4),
+    0 0 40px rgba(193, 119, 255, 0.2);
+}
+
+.other-bar {
+  background: rgba(255, 255, 255, 0.2);
+  animation: barAppear 0.8s ease-out;
+}
+
+.participant-name {
+  font-size: 16px;
+  font-weight: 500;
+  font-family: 'Montserrat', sans-serif;
+  text-align: center;
+}
+
+.user-name {
+  background: linear-gradient(45deg, #00CAF1, #C177FF, #00CAF1);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 3s ease-in-out infinite;
+}
+
+.other-name {
+  color: #FFFFFF;
+}
+
+@keyframes barAppear {
+  0% {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+@keyframes borderGradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes floatShape1 {
+    0% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+    25% {
+        transform: translate(150px, -80px) rotate(25deg) scale(1.3);
+    }
+    50% {
+        transform: translate(-100px, 120px) rotate(-30deg) scale(0.7);
+    }
+    75% {
+        transform: translate(200px, 60px) rotate(45deg) scale(1.4);
+    }
+    100% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+}
+
+@keyframes floatShape2 {
+    0% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+    20% {
+        transform: translate(-180px, 100px) rotate(-40deg) scale(1.5);
+    }
+    40% {
+        transform: translate(120px, -120px) rotate(35deg) scale(0.6);
+    }
+    60% {
+        transform: translate(-60px, 180px) rotate(-50deg) scale(1.2);
+    }
+    80% {
+        transform: translate(200px, -80px) rotate(25deg) scale(0.8);
+    }
+    100% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+}
+
+@keyframes floatShape3 {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg) scale(1);
+    }
+    25% {
+        transform: translate(-30%, -70%) rotate(25deg) scale(1.2);
+    }
+    50% {
+        transform: translate(-70%, -30%) rotate(-25deg) scale(0.8);
+    }
+    75% {
+        transform: translate(-20%, -60%) rotate(15deg) scale(1.1);
+    }
+    100% {
+        transform: translate(-50%, -50%) rotate(0deg) scale(1);
+    }
+}
+
+@keyframes pulse1 {
+    0%, 100% {
+        opacity: 0.5;
+        filter: blur(185px);
+    }
+    50% {
+        opacity: 0.7;
+        filter: blur(150px);
+    }
+}
+
+@keyframes pulse2 {
+    0%, 100% {
+        opacity: 0.5;
+        filter: blur(85px);
+    }
+    50% {
+        opacity: 0.7;
+        filter: blur(60px);
+    }
+}
+
+@keyframes pulse3 {
+    0%, 100% {
+        opacity: 0.6;
+        filter: blur(120px);
+    }
+    50% {
+        opacity: 0.75;
+        filter: blur(100px);
+    }
+}
+
+.background-shape {
+  position: absolute;
+  width: 500px;
+  height: 361px;
+  top: -316px;
+  right: -200px;
+  opacity: 50%;
+  background: linear-gradient(180deg, #00CAF1 0%, #C177FF 100%);
+  border-radius: 100px;
+  filter: blur(185px);
+  z-index: 0;
+  animation: floatShape1 12s ease-in-out infinite, pulse1 4s ease-in-out infinite;
+}
+
+.background-shape-2 {
+  z-index: 0;
+  position: absolute;
+  width: 500px;
+  height: 511px;
+  bottom: -200px;
+  left: -248px;
+  opacity: 50%;
+  background: linear-gradient(180deg, #00CAF1 0%, #C177FF 100%);
+  border-radius: 100px;
+  filter: blur(85px);
+  animation: floatShape2 15s ease-in-out infinite, pulse2 3s ease-in-out infinite;
+}
+
+/* Добавляем третий элемент для большего разнообразия */
+.background-shape-3 {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    top: 50%;
+    left: 50%;
+    opacity: 60%;
+    background: linear-gradient(180deg, #C177FF 0%, #00CAF1 100%);
+    border-radius: 80px;
+    filter: blur(120px);
+    animation: floatShape3 25s ease-in-out infinite, pulse3 6s ease-in-out infinite;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+  .auction-content {
+    padding: 0 16px;
+  }
+
+  .auction-container {
+    padding: 100px 0 20px;
+  }
+
+  .auction-timer {
+    font-size: 48px;
+    margin-bottom: 30px;
+  }
+
+  .lot-title {
+    font-size: 32px;
+  }
+
+  .lot-price {
+    font-size: 24px;
+  }
+
+  .bid-info {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  .info-value {
+    font-size: 24px;
+  }
+
+  .increase-bid-button {
+    padding: 16px 24px;
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+
+  .participants-visualization {
+    gap: 30px;
+    height: 400px;
+  }
+
+  .bar-container {
+    width: 120px;
+    height: 350px;
+  }
+
+  .bar {
+    width: 100%;
+    min-height: 20px;
+  }
+
+  .bar-value {
+    font-size: 14px;
+  }
+
+  .participant-name {
+    font-size: 14px;
+  }
+}
+
+/* Предотвращение масштабирования на мобильных устройствах */
+@media (max-width: 768px) {
+  .auction-page {
+    min-height: 100vh;
+    height: auto;
+  }
+
+  .auction-content {
+    min-height: 100vh;
+    height: auto;
+  }
+
+  .auction-container {
+    min-height: calc(100vh - 120px);
+  }
+}
+
+/* Специальные стили для предотвращения проблем с клавиатурой на iOS */
+@supports (-webkit-touch-callout: none) {
+  .auction-page {
+    height: 100vh;
+    height: -webkit-fill-available;
+  }
+  
+  .auction-content {
+    height: 100vh;
+    height: -webkit-fill-available;
+  }
+} 

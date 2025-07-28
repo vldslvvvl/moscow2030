@@ -1,0 +1,440 @@
+.details-page {
+  width: 100vw;
+  height: 100vh;
+  background-color: #000015;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.details-content {
+  flex: 1;
+  z-index: 10;
+  margin: 60px auto;
+  width: 880px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 1200px;
+  overflow: hidden;
+}
+
+.details-container {
+  width: 100%;
+  max-width: 880px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Основная карточка */
+.property-card {
+    z-index: 10;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  overflow: hidden;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Контейнер основного изображения */
+.main-image-container {
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.main-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.main-image-container:hover .main-image {
+  transform: scale(1.02);
+}
+
+/* Информационная панель */
+.info-panel {
+  padding: 32px;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Контейнер миниатюр */
+.thumbnails-container {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.thumbnail {
+  width: 80px;
+  height: 60px;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.thumbnail.active {
+  border-color: #00CAF1;
+  box-shadow: 0 0 12px rgba(0, 202, 241, 0.4);
+}
+
+.thumbnail:hover {
+  transform: scale(1.05);
+  border-color: rgba(0, 202, 241, 0.6);
+}
+
+.thumbnail-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Заголовок недвижимости */
+.property-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  background: linear-gradient(45deg, #00CAF1, #C177FF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* Секция преимуществ */
+.advantages-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.advantages-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+}
+
+.advantages-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.advantage-item {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.5;
+  position: relative;
+  padding-left: 24px;
+}
+
+.advantage-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 8px;
+  height: 8px;
+  background: #00CAF1;
+  border-radius: 50%;
+}
+
+/* Кнопка бланка договора */
+.contract-form-button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 24px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  color: white;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  align-self: flex-start;
+}
+
+.contract-form-button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.document-icon {
+  flex-shrink: 0;
+}
+
+/* Строка с ценой и кнопкой */
+.price-action-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.price-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.price {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+}
+
+/* Кнопка торговой площадки */
+.trading-button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 32px;
+  background: linear-gradient(45deg, #00CAF1, #C177FF);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 24px rgba(0, 202, 241, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.trading-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0, 202, 241, 0.4);
+}
+
+.arrow-icon {
+  flex-shrink: 0;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+
+  
+  .info-panel {
+    padding: 24px;
+  }
+  
+  .property-title {
+    font-size: 24px;
+  }
+  
+  .price {
+    font-size: 28px;
+  }
+  
+  .price-action-row {
+    flex-direction: column;
+    gap: 20px;
+    align-items: stretch;
+  }
+  
+  .trading-button {
+    justify-content: center;
+  }
+  
+  .thumbnails-container {
+    gap: 8px;
+  }
+  
+  .thumbnail {
+    width: 60px;
+    height: 45px;
+  }
+}
+
+@media (max-width: 480px) {
+  .info-panel {
+    padding: 20px;
+  }
+  
+  .property-title {
+    font-size: 20px;
+  }
+  
+  .advantages-title {
+    font-size: 16px;
+  }
+  
+  .advantage-item {
+    font-size: 14px;
+  }
+  
+  .price {
+    font-size: 24px;
+  }
+  
+  .trading-button {
+    font-size: 14px;
+    padding: 16px 24px;
+  }
+} 
+
+.background-shape {
+    position: absolute;
+    width: 500px;
+    height: 361px;
+    top: 200px;
+    right: -150px;
+    opacity: 70%;
+    background: linear-gradient(180deg, #00CAF1 0%, #C177FF 100%);
+    border-radius: 100px;
+    filter: blur(185px);
+    animation: floatShape1 12s ease-in-out infinite, pulse1 4s ease-in-out infinite;
+}
+
+.background-shape-2 {
+    z-index: 1;
+    position: absolute;
+    width: 500px;
+    height: 511px;
+    top: 600px;
+    left: -100px;
+    opacity: 70%;
+    background: linear-gradient(180deg, #00CAF1 0%, #C177FF 100%);
+    border-radius: 100px;
+    filter: blur(85px);
+    animation: floatShape2 15s ease-in-out infinite, pulse2 3s ease-in-out infinite;
+}
+
+/* Добавляем третий элемент для большего разнообразия */
+.background-shape-3 {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    top: 50%;
+    left: 50%;
+    opacity: 60%;
+    background: linear-gradient(180deg, #C177FF 0%, #00CAF1 100%);
+    border-radius: 80px;
+    filter: blur(120px);
+    animation: floatShape3 25s ease-in-out infinite, pulse3 6s ease-in-out infinite;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes floatShape1 {
+    0% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+    25% {
+        transform: translate(150px, -80px) rotate(25deg) scale(1.3);
+    }
+    50% {
+        transform: translate(-100px, 120px) rotate(-30deg) scale(0.7);
+    }
+    75% {
+        transform: translate(200px, 60px) rotate(45deg) scale(1.4);
+    }
+    100% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+}
+
+@keyframes floatShape2 {
+    0% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+    20% {
+        transform: translate(-180px, 100px) rotate(-40deg) scale(1.5);
+    }
+    40% {
+        transform: translate(120px, -120px) rotate(35deg) scale(0.6);
+    }
+    60% {
+        transform: translate(-60px, 180px) rotate(-50deg) scale(1.2);
+    }
+    80% {
+        transform: translate(200px, -80px) rotate(25deg) scale(0.8);
+    }
+    100% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+}
+
+@keyframes floatShape3 {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg) scale(1);
+    }
+    25% {
+        transform: translate(-30%, -70%) rotate(25deg) scale(1.2);
+    }
+    50% {
+        transform: translate(-70%, -30%) rotate(-25deg) scale(0.8);
+    }
+    75% {
+        transform: translate(-20%, -60%) rotate(15deg) scale(1.1);
+    }
+    100% {
+        transform: translate(-50%, -50%) rotate(0deg) scale(1);
+    }
+}
+
+@keyframes pulse1 {
+    0%, 100% {
+        opacity: 0.7;
+        filter: blur(185px);
+    }
+    50% {
+        opacity: 0.9;
+        filter: blur(150px);
+    }
+}
+
+@keyframes pulse2 {
+    0%, 100% {
+        opacity: 0.7;
+        filter: blur(85px);
+    }
+    50% {
+        opacity: 1;
+        filter: blur(60px);
+    }
+}
+
+@keyframes pulse3 {
+    0%, 100% {
+        opacity: 0.6;
+        filter: blur(120px);
+    }
+    50% {
+        opacity: 0.75;
+        filter: blur(100px);
+    }
+}

@@ -1,0 +1,202 @@
+
+.header {
+  color: white;
+  padding: 1rem 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-container {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  margin-top: 64px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 2rem;
+}
+
+.nav a {
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.nav a:hover {
+  color: #646cff;
+}
+
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.home-page {
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.home-page h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.home-page p {
+  font-size: 1.2rem;
+  color: #666;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.app {
+  width: 100vw;
+  height: 100vh;
+  background-color: #000015;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Улучшаем загрузку */
+.app * {
+  box-sizing: border-box;
+}
+
+/* Убираем скроллбары для лучшего UX */
+.app {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.app::-webkit-scrollbar {
+  display: none;
+}
+
+/* Запрет на приближение страницы */
+* {
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Разрешаем выделение текста только в input и textarea */
+input, textarea {
+  -webkit-user-select: text;
+  -khtml-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* Отключаем user-select для остальных элементов */
+button, div, span, p, h1, h2, h3, h4, h5, h6, label {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.primary-button {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  background: linear-gradient(45deg, #00CAF1, #C177FF, #00CAF1);
+  background-size: 200% 200%;
+  color: white;
+  border: none;
+  padding: 32px 64px;
+  border-radius: 100px;
+  font-size: 24px;
+  font-weight: 600;
+  cursor: pointer;
+  position: relative;
+  animation: gradientShift 3s ease-in-out infinite;
+  box-shadow: 
+    0 0 20px rgba(0, 202, 241, 0.5),
+    0 0 40px rgba(193, 119, 255, 0.3),
+    0 0 60px rgba(0, 202, 241, 0.2);
+  transition: all 0.3s ease;
+}
+
+.primary-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 0 30px rgba(0, 202, 241, 0.7),
+    0 0 50px rgba(193, 119, 255, 0.5),
+    0 0 70px rgba(0, 202, 241, 0.3);
+}
+
+.primary-button svg {
+  animation: arrowMove 2s ease-in-out infinite;
+}
+
+.gradient-text {
+  background: linear-gradient(45deg, #00CAF1, #C177FF, #00CAF1);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 3s ease-in-out infinite;
+}
+
+.white-text {
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+}
+
+/* Оптимизированные изображения */
+.loading {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.loaded {
+  opacity: 1;
+}
+
+.image-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  border-radius: 8px;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes arrowMove {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-8px);
+  }
+}

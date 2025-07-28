@@ -1,0 +1,179 @@
+.lose-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 21, 0.95);
+  display: flex;
+  align-items: top;
+  justify-content: center;
+  z-index: 1000;
+  animation: modalFadeIn 0.5s ease-out;
+}
+
+.lose-modal {
+  position: relative;
+  width: 880px;
+  background: linear-gradient(135deg, rgba(0, 202, 241, 0.1), rgba(193, 119, 255, 0.1));
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 40px 30px;
+  margin-top: 200px;
+  height: fit-content;
+  text-align: center;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  animation: modalSlideUp 0.6s ease-out;
+}
+
+
+.lose-title-main {
+  font-size: 48px;
+    line-height: 1.08;
+  font-weight: 500;
+  color: #FFFFFF;
+  margin: 0 0 20px 0;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.lose-title-sub {
+  font-size: 24px;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  line-height: 1.3;
+}
+
+.highlight-blue {
+background: linear-gradient(45deg, #00CAF1, #C177FF, #00CAF1);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 3s ease-in-out infinite;
+}
+
+
+/* Сообщение */
+.lose-message {
+  margin-bottom: 40px;
+}
+
+.lose-message p {
+  font-size: 32px;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  line-height: 1.4;
+}
+
+/* Вопрос */
+.lose-question {
+  margin-bottom: 30px;
+}
+
+.lose-question p {
+  font-size: 32px;
+  color: #FFFFFF;
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+}
+
+/* Кнопки */
+.lose-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.lose-button {
+  padding: 32px 64px;
+  font-size: 20px;
+  font-weight: 600;
+  border-radius: 120px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  font-family: 'Montserrat', sans-serif;
+  border: 2px solid transparent;
+}
+
+.no-button {
+  background: transparent;
+  border-color: #C177FF;
+  color: #FFFFFF;
+}
+
+.no-button:hover {
+  background: rgba(193, 119, 255, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(193, 119, 255, 0.3);
+}
+
+.yes-button {
+  background: linear-gradient(135deg, #00CAF1, #C177FF);
+  color: #FFFFFF;
+}
+
+.yes-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 202, 241, 0.4);
+}
+
+/* Анимации */
+@keyframes modalFadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes modalSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(50px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .lose-modal {
+    width: 95%;
+    padding: 30px 20px;
+  }
+
+  .lose-title-main {
+    font-size: 36px;
+  }
+
+  .lose-title-sub {
+    font-size: 20px;
+  }
+
+  .lose-message p {
+    font-size: 16px;
+  }
+
+  .lose-question p {
+    font-size: 18px;
+  }
+
+  .lose-buttons {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .lose-button {
+    padding: 14px 30px;
+    font-size: 16px;
+  }
+} 
