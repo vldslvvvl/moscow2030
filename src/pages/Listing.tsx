@@ -59,16 +59,17 @@ const Listing: React.FC = () => {
     {
       id: 1,
       type: "apartment",
-      title: "1 комнатная квартира, 25м²",
-      price: "15 000 000 ₽",
-      image: "спальня 1.jpg",
-      area: "25м²",
+      title: "2-комн. квартира на продажу, 68,3 м²",
+      price: "26 418 440 ₽",
+      image: "/src/assets/images/mock/1/Гостиная.png",
+      area: "68,3м²",
       rooms: 1,
-      mainImage: "/src/assets/images/mock/спальня 1.jpg",
+      mainImage: "/src/assets/images/mock/1/Гостиная.png",
       thumbnails: [
-        "/src/assets/images/mock/спальня 1.jpg",
-        "/src/assets/images/mock/кухня 1.jpg",
-        "/src/assets/images/mock/ванная 1.jpg",
+        "/src/assets/images/mock/1/Гостиная.png",
+        "/src/assets/images/mock/1/комната.png",
+        "/src/assets/images/mock/1/кухня.png",
+        "/src/assets/images/mock/1/ванная и туалет.png",
       ],
       advantages: [
         "прозрачные условия сделки",
@@ -81,16 +82,17 @@ const Listing: React.FC = () => {
     {
       id: 2,
       type: "apartment",
-      title: "2-х комнатная квартира, 45м²",
-      price: "35 000 000 ₽",
-      image: "спальня 2.jpg",
+      title: "1-комн. квартира на продажу, 41,4 м²",
+      price: "16 663 500 ₽",
+      image: "/src/assets/images/mock/2/комната.png",
       area: "45м²",
       rooms: 2,
-      mainImage: "/src/assets/images/mock/спальня 2.jpg",
+      mainImage: "/src/assets/images/mock/2/комната.png",
       thumbnails: [
-        "/src/assets/images/mock/спальня 2.jpg",
-        "/src/assets/images/mock/кухня 2.jpg",
-        "/src/assets/images/mock/ванная 2.jpg",
+        "/src/assets/images/mock/2/Гостиная.png",
+        "/src/assets/images/mock/2/комната.png",
+        "/src/assets/images/mock/2/кухня.png",
+        "/src/assets/images/mock/2/ванная.png",
       ],
       advantages: [
         "прозрачные условия сделки",
@@ -103,16 +105,17 @@ const Listing: React.FC = () => {
     {
       id: 3,
       type: "apartment",
-      title: "3-х комнатная квартира, 63м²",
-      price: "74 000 000 ₽",
-      image: "кухня 1.jpg",
-      area: "63м²",
-      rooms: 3,
-      mainImage: "/src/assets/images/mock/кухня 1.jpg",
+      title: "1-комн. квартира на продажу, 45 м²",
+      price: "9 243 000 ₽",
+      image: "/src/assets/images/mock/3/прихожая.png",
+      area: "45м²",
+      rooms: 1,
+      mainImage: "/src/assets/images/mock/3/прихожая.png",
       thumbnails: [
-        "/src/assets/images/mock/кухня 1.jpg",
-        "/src/assets/images/mock/спальня 3.jpg",
-        "/src/assets/images/mock/ванная 3.jpg",
+        "/src/assets/images/mock/3/прихожая.png",
+        "/src/assets/images/mock/3/комната.png",
+        "/src/assets/images/mock/3/кухня.png",
+        "/src/assets/images/mock/3/туалет.png",
       ],
       advantages: [
         "прозрачные условия сделки",
@@ -125,16 +128,17 @@ const Listing: React.FC = () => {
     {
       id: 4,
       type: "apartment",
-      title: "4-х комнатная квартира, 92м²",
-      price: "120 000 000 ₽",
-      image: "кухня 2.jpg",
+      title: "3-комн. квартира на продажу, 74,4 м²",
+      price: "14 574 960 ₽",
+      image: "/src/assets/images/mock/4/Комната.png",
       area: "92м²",
       rooms: 4,
-      mainImage: "/src/assets/images/mock/кухня 2.jpg",
+      mainImage: "/src/assets/images/mock/4/Комната.png",
       thumbnails: [
-        "/src/assets/images/mock/кухня 2.jpg",
-        "/src/assets/images/mock/спальня 4.jpg",
-        "/src/assets/images/mock/ванная 4.jpg",
+        "/src/assets/images/mock/4/прихожая.png",
+        "/src/assets/images/mock/4/комната.png",
+        "/src/assets/images/mock/4/кухня.png",
+        "/src/assets/images/mock/4/ванная.png",
       ],
       advantages: [
         "прозрачные условия сделки",
@@ -410,7 +414,7 @@ const Listing: React.FC = () => {
               <div key={item.id} className="property-card">
                 <div className="property-image">
                   <img
-                    src={`/src/assets/images/mock/${item.image}`}
+                    src={`${item.image}`}
                     alt={item.title}
                     style={{
                       width: "100%",

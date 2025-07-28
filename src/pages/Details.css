@@ -47,7 +47,7 @@
 /* Контейнер основного изображения */
 .main-image-container {
   width: 100%;
-  height: 400px;
+  height: 550px;
   overflow: hidden;
   position: relative;
   flex-shrink: 0;
