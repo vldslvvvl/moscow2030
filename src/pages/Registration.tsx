@@ -9,12 +9,25 @@ import backgroundVideo from "../assets/images/background-bot-2.MOV";
 const Registration: React.FC = () => {
   const { navigateTo, auctionData } = usePageContext();
   const [name, setName] = useState("");
-  const [balance] = useState("25 000 000");
+  // Удаляем статический баланс, теперь он будет вычисляться динамически
   const [edsReceived, setEdsReceived] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isEdsLoading, setIsEdsLoading] = useState(false);
   const [loadingText, setLoadingText] = useState("");
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+
+  // Функция для расчета баланса (цена объекта + 30%)
+  const calculateBalance = (): string => {
+    if (!auctionData?.price) {
+      return "25 000 000"; // Значение по умолчанию, если данных нет
+    }
+
+    const basePrice = auctionData.price;
+    const budget = Math.round(basePrice * 1.3); // Добавляем 30%
+
+    // Форматируем число с пробелами
+    return budget.toLocaleString("ru-RU").replace(/,/g, " ");
+  };
 
   const handleGetEDS = () => {
     setIsEdsLoading(true);
@@ -141,7 +154,7 @@ const Registration: React.FC = () => {
 
               <div className="balance-section">
                 <label className="field-label">Ваш баланс, ₽</label>
-                <div className="balance-amount">{balance}</div>
+                <div className="balance-amount">{calculateBalance()}</div>
               </div>
 
               <button

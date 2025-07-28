@@ -1,0 +1,198 @@
+.isometric-bars-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+.bid-values {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  width: 1000px;
+}
+
+.bid-value {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 32px;
+  font-weight: 600;
+  color: #FFFFFF;
+  text-align: center;
+  flex: 1;
+}
+
+.bars-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 800px;
+  width: 950px;
+  max-width: 1000px;
+  perspective: 800px;
+}
+
+.bar-container {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  max-width: 190px;
+}
+
+.isometric-bar {
+  position: relative;
+  width: 100%;
+  height: var(--bar-height);
+  min-height: 30px;
+  transform-style: preserve-3d;
+  transform: rotateX(-20deg) rotateY(-45deg);
+  transition: all 0.5s ease;
+}
+
+/* Передняя грань */
+.bar-face.front {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform-origin: bottom;
+}
+
+/* Верхняя грань */
+.bar-face.top {
+  position: absolute;
+  width: 100%;
+  height: 80px;
+  top: -79px;
+  transform-origin: bottom;
+  transform: rotateX(90deg);
+}
+
+/* Правая грань */
+.bar-face.right {
+  position: absolute;
+  width: 80px;
+  height: 100%;
+  right: -80px;
+  transform-origin: left;
+  transform: rotateY(90deg);
+}
+
+/* Стили для бара пользователя */
+.user-bar .bar-face.front {
+  background: linear-gradient(180deg, #00CAF1 0%, #C177FF 100%);
+  box-shadow: 0 0 30px rgba(0, 202, 241, 0.4);
+}
+
+.user-bar .bar-face.top {
+  background: linear-gradient(135deg, #40D4FF 0%, #00CAF1 100%);
+}
+
+.user-bar .bar-face.right {
+  background: linear-gradient(180deg, #00CAF1 0%, #C177FF 100%);
+}
+
+/* Стили для других участников */
+.other-bar .bar-face.front {
+  background: linear-gradient(180deg, #6A6A7A 0%, #4A4A5A 50%, #2A2A3A 100%);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.other-bar .bar-face.top {
+  background: linear-gradient(135deg, #6A6A7A 0%, #4A4A5A 100%);
+}
+
+.other-bar .bar-face.right {
+  background: linear-gradient(180deg, #4A4A5A 0%, #2A2A3A 100%);
+}
+
+/* Имена участников */
+.participant-names {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 30px;
+  width: 1000px;
+  max-width: 1000px;
+}
+
+.participant-name {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 32px;
+  font-weight: 500;
+  text-align: center;
+  flex: 1;
+}
+
+.user-name {
+  background: linear-gradient(45deg, #00CAF1, #C177FF, #00CAF1);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 3s ease-in-out infinite;
+}
+
+.other-name {
+  color: #FFFFFF;
+}
+
+/* Анимации */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Эффект при наведении */
+.bar-container:hover .isometric-bar {
+  transform: rotateX(-20deg) rotateY(-45deg) scale(1.02);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .isometric-bars-container {
+    height: 350px;
+  }
+  
+  .bid-values {
+    gap: 40px;
+    margin-bottom: 20px;
+  }
+  
+  .bid-value {
+    font-size: 14px;
+  }
+  
+  .bars-wrapper {
+    gap: 15px;
+    height: 200px;
+  }
+  
+  .bar-face.top {
+    height: 50px;
+  }
+  
+  .bar-face.right {
+    width: 50px;
+  }
+  
+  .participant-names {
+    gap: 40px;
+    margin-top: 20px;
+  }
+  
+  .participant-name {
+    font-size: 14px;
+  }
+} 

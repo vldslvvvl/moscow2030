@@ -54,14 +54,11 @@ const LoseModal: React.FC<LoseModalProps> = ({
 
         {/* Кнопки */}
         <div className="lose-buttons">
-          <button className="lose-button no-button" onClick={handleStay}>
-            НЕТ
-          </button>
           <button
             className="lose-button yes-button"
             onClick={handleChooseAnother}
           >
-            ДА
+            Сыграть еще раз
           </button>
         </div>
       </div>

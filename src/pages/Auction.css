@@ -178,86 +178,17 @@
   transform: translateY(-2px);
 }
 
-/* Визуализация участников */
-.participants-visualization {
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  gap: 60px;
+/* 3D Визуализация участников */
+.participants-3d-container {
   width: 100%;
   max-width: 800px;
   margin-top: auto;
   padding-bottom: 40px;
-  height: 900px;
-}
-
-.participant-bar {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  height: 100%;
-  justify-content: flex-end;
-}
-
-.bar-container {
-  width: 270px;
-  height: 800px;
-  display: flex;
-  align-items: flex-end;
   justify-content: center;
+  align-items: center;
+  z-index: 10;
   position: relative;
-}
-
-.bar-value {
-  font-size: 18px;
-  font-weight: 500;
-  color: #FFFFFF;
-  font-family: 'Montserrat', sans-serif;
-  text-align: center;
-}
-
-.bar {
-  width: 100%;
-  min-height: 20px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  position: relative;
-  animation: barAppear 0.8s ease-out;
-}
-
-.user-bar {
-  background: linear-gradient(45deg, #00CAF1, #C177FF, #00CAF1);
-  background-size: 200% 200%;
-  animation: gradientShift 3s ease-in-out infinite, barAppear 0.8s ease-out;
-  box-shadow: 
-    0 0 20px rgba(0, 202, 241, 0.4),
-    0 0 40px rgba(193, 119, 255, 0.2);
-}
-
-.other-bar {
-  background: rgba(255, 255, 255, 0.2);
-  animation: barAppear 0.8s ease-out;
-}
-
-.participant-name {
-  font-size: 16px;
-  font-weight: 500;
-  font-family: 'Montserrat', sans-serif;
-  text-align: center;
-}
-
-.user-name {
-  background: linear-gradient(45deg, #00CAF1, #C177FF, #00CAF1);
-  background-size: 200% 200%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: gradientShift 3s ease-in-out infinite;
-}
-
-.other-name {
-  color: #FFFFFF;
 }
 
 @keyframes barAppear {
@@ -468,28 +399,7 @@
     margin-bottom: 20px;
   }
 
-  .participants-visualization {
-    gap: 30px;
-    height: 400px;
-  }
 
-  .bar-container {
-    width: 120px;
-    height: 350px;
-  }
-
-  .bar {
-    width: 100%;
-    min-height: 20px;
-  }
-
-  .bar-value {
-    font-size: 14px;
-  }
-
-  .participant-name {
-    font-size: 14px;
-  }
 }
 
 /* Предотвращение масштабирования на мобильных устройствах */

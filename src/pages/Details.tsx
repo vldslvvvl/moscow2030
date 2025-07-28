@@ -7,7 +7,7 @@ import "./Details.css";
 import backgroundVideo from "../assets/images/background-bot-2.MOV";
 
 const Details: React.FC = () => {
-  const { navigateTo, propertyDetails } = usePageContext();
+  const { navigateTo, propertyDetails, setAuctionData } = usePageContext();
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   // Проверяем, есть ли данные о недвижимости
@@ -28,8 +28,22 @@ const Details: React.FC = () => {
 
   const handleGoToTrading = useCallback(() => {
     console.log("Переход на торговую площадку");
+
+    // Извлекаем числовую цену из строки
+    const priceMatch = propertyDetails.price.match(/[\d\s]+/);
+    const price = priceMatch ? parseInt(priceMatch[0].replace(/\s/g, "")) : 0;
+
+    // Устанавливаем данные для аукциона
+    setAuctionData({
+      id: propertyDetails.id,
+      title: propertyDetails.title,
+      price: price,
+      type: propertyDetails.type,
+    });
+
+    // Переходим на страницу регистрации
     navigateTo("registration");
-  }, [navigateTo]);
+  }, [navigateTo, propertyDetails, setAuctionData]);
 
   const handleBackClick = useCallback(() => {
     navigateTo("listing");

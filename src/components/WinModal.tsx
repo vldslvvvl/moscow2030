@@ -66,7 +66,7 @@ const WinModal: React.FC<WinModalProps> = ({
         <div className="win-details">
           <p className="win-property">{propertyTitle}</p>
           <p className="win-bid">
-            со ставкой {winningBid.toLocaleString("ru-RU")} ₽
+            Итоговая сумма: {winningBid.toLocaleString("ru-RU")} ₽
           </p>
         </div>
 

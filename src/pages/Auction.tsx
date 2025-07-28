@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import { usePageContext } from "../context/PageContext";
 import WinModal from "../components/WinModal";
 import LoseModal from "../components/LoseModal";
+import IsometricBars from "../components/IsometricBars";
 import "./Auction.css";
 
 interface Participant {
@@ -14,19 +15,46 @@ interface Participant {
 
 const Auction: React.FC = () => {
   const { navigateTo, auctionData } = usePageContext();
-  const [timeLeft, setTimeLeft] = useState(30);
-  const [userBudget, setUserBudget] = useState(25000000);
-  const [currentBid, setCurrentBid] = useState(15000000);
+  const [timeLeft, setTimeLeft] = useState(300);
+
+  // Функция для расчета изначального бюджета (цена объекта + 30%)
+  const calculateInitialBudget = (): number => {
+    if (!auctionData?.price) {
+      return 25000000; // Значение по умолчанию
+    }
+    return Math.round(auctionData.price * 1.3);
+  };
+
+  // Функция для получения начальной ставки (цена объекта)
+  const getInitialBid = (): number => {
+    return auctionData?.price || 15000000; // Значение по умолчанию
+  };
+
+  const initialBudget = calculateInitialBudget();
+  const initialBid = getInitialBid();
+
   const [isBlinking, setIsBlinking] = useState(false);
   const [showWinModal, setShowWinModal] = useState(false);
   const [showLoseModal, setShowLoseModal] = useState(false);
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   const [participants, setParticipants] = useState<Participant[]>([
-    { id: "user", name: "Вы", bid: 15000000, isUser: true },
-    { id: "alexey", name: "Алексей", bid: 14000000, isUser: false },
-    { id: "oleg", name: "Олег", bid: 15000000, isUser: false },
+    { id: "user", name: "Вы", bid: initialBid, isUser: true },
+    { id: "alexey", name: "Алексей", bid: initialBid - 1000000, isUser: false },
+    { id: "oleg", name: "Олег", bid: initialBid, isUser: false },
   ]);
+
+  // Функция для расчета остатка бюджета пользователя
+  const getUserBudgetRemaining = (): number => {
+    const userParticipant = participants.find((p) => p.isUser);
+    if (!userParticipant) return initialBudget;
+    return initialBudget - userParticipant.bid;
+  };
+
+  // Функция для получения текущей ставки пользователя
+  const getCurrentBid = (): number => {
+    const userParticipant = participants.find((p) => p.isUser);
+    return userParticipant?.bid || initialBid;
+  };
 
   // Таймер
   useEffect(() => {
@@ -61,29 +89,24 @@ const Auction: React.FC = () => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [timeLeft]); // Убрали participants из зависимостей
+  }, [timeLeft, participants]);
 
   const handleIncreaseBid = useCallback(() => {
-    if (isButtonDisabled) return;
+    const increaseAmount = 100000;
 
-    const increaseAmount = 1000000;
-    if (userBudget >= increaseAmount) {
-      setIsButtonDisabled(true);
+    setParticipants((prev) => {
+      const currentUserBid = prev.find((p) => p.isUser)?.bid || 0;
+      const remainingBudget = initialBudget - currentUserBid;
 
-      setUserBudget((prev) => prev - increaseAmount);
-      setCurrentBid((prev) => prev + increaseAmount);
+      if (remainingBudget >= increaseAmount) {
+        return prev.map((p) =>
+          p.isUser ? { ...p, bid: p.bid + increaseAmount } : p
+        );
+      }
 
-      // Обновляем ставку пользователя
-      setParticipants((prev) =>
-        prev.map((p) => (p.isUser ? { ...p, bid: p.bid + increaseAmount } : p))
-      );
-
-      // Разрешаем повторный клик через 300мс
-      setTimeout(() => {
-        setIsButtonDisabled(false);
-      }, 300);
-    }
-  }, [userBudget, isButtonDisabled]);
+      return prev; // Не изменяем состояние если недостаточно бюджета
+    });
+  }, [initialBudget]);
 
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
@@ -124,22 +147,20 @@ const Auction: React.FC = () => {
           <div className="bid-info">
             <div className="budget-box">
               <label className="info-label">Остаток бюджета, ₽</label>
-              <div className="info-value">{formatCurrency(userBudget)}</div>
+              <div className="info-value">
+                {formatCurrency(getUserBudgetRemaining())}
+              </div>
             </div>
             <div className="current-bid-box">
               <label className="info-label">Текущая ставка, ₽</label>
-              <div className="info-value">{formatCurrency(currentBid)}</div>
+              <div className="info-value">
+                {formatCurrency(getCurrentBid())}
+              </div>
             </div>
           </div>
 
           {/* Кнопка увеличения ставки */}
-          <button
-            className={`increase-bid-button ${
-              isButtonDisabled ? "disabled" : ""
-            }`}
-            onClick={handleIncreaseBid}
-            disabled={isButtonDisabled}
-          >
+          <button className={`increase-bid-button`} onClick={handleIncreaseBid}>
             <svg
               width="20"
               height="20"
@@ -155,35 +176,12 @@ const Auction: React.FC = () => {
                 strokeLinejoin="round"
               />
             </svg>
-            <span>Увеличить ставку на 1 000 000 ₽</span>
+            <span>Увеличить ставку на 100 000₽</span>
           </button>
 
-          {/* Визуализация участников */}
-          <div className="participants-visualization">
-            {participants.map((participant) => (
-              <div key={participant.id} className="participant-bar">
-                <div className="bar-value">
-                  {formatCurrency(participant.bid)} ₽
-                </div>
-                <div className="bar-container">
-                  <div
-                    className={`bar ${
-                      participant.isUser ? "user-bar" : "other-bar"
-                    }`}
-                    style={{
-                      height: `${(participant.bid / maxBid) * 100}%`,
-                    }}
-                  />
-                </div>
-                <div
-                  className={`participant-name ${
-                    participant.isUser ? "user-name" : "other-name"
-                  }`}
-                >
-                  {participant.name}
-                </div>
-              </div>
-            ))}
+          {/* Изометрическая визуализация участников */}
+          <div className="participants-3d-container">
+            <IsometricBars participants={participants} maxBid={maxBid} />
           </div>
         </div>
       </main>
@@ -202,7 +200,7 @@ const Auction: React.FC = () => {
       <LoseModal
         isOpen={showLoseModal}
         onClose={() => setShowLoseModal(false)}
-        userBudget={userBudget}
+        userBudget={getUserBudgetRemaining()}
       />
     </div>
   );

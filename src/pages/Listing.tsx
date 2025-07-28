@@ -151,7 +151,7 @@ const Listing: React.FC = () => {
       id: 1,
       type: "parking",
       title: "Москва, ЦАО, р-н Пресненский, Краснопресненская наб., 14Ак1",
-      price: "2 500 000 ₽",
+      price: "3 200 000 ₽",
       image: "carplace1.PNG",
       mainImage: "/src/assets/images/mock/carplace1.PNG",
       thumbnails: [
@@ -191,7 +191,7 @@ const Listing: React.FC = () => {
       id: 3,
       type: "parking",
       title: "Москва, ЦАО, р-н Тверской, 2-я Брестская ул., 8",
-      price: "3 200 000 ₽",
+      price: "2 500 000 ₽",
       image: "carplace3.PNG",
       mainImage: "/src/assets/images/mock/carplace3.PNG",
       thumbnails: [
