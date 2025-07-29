@@ -15,7 +15,7 @@ interface Participant {
 
 const Auction: React.FC = () => {
   const { navigateTo, auctionData } = usePageContext();
-  const [timeLeft, setTimeLeft] = useState(300);
+  const [timeLeft, setTimeLeft] = useState(30);
 
   // Функция для расчета изначального бюджета (цена объекта + 30%)
   const calculateInitialBudget = (): number => {
@@ -76,7 +76,10 @@ const Auction: React.FC = () => {
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         const newTime = prev - 1;
-
+        var min = 50000;
+        var max = 100000;
+        participants[1].bid += Math.floor(Math.random() * (max - min + 1)) + 1;
+        participants[2].bid += Math.floor(Math.random() * (max - min + 1)) + 1;
         // Моргание в последние 5 секунд
         if (newTime <= 5 && newTime > 0) {
           setIsBlinking(true);
