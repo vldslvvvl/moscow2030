@@ -1,6 +1,7 @@
 import React, { useCallback } from "react";
 import Header from "../components/Header";
 import { usePageContext } from "../context/PageContext";
+import { useButtonSound } from "../hooks/useButtonSound";
 import "./Introduction.css";
 import backgroundVideo from "../assets/images/background-bot-2.MOV";
 
@@ -13,6 +14,7 @@ interface InstructionCard {
 
 const Introduction: React.FC = () => {
   const { navigateTo } = usePageContext();
+  const playButtonSound = useButtonSound();
 
   const instructionCards: InstructionCard[] = [
     {
@@ -49,6 +51,7 @@ const Introduction: React.FC = () => {
   ];
 
   const handleNextClick = () => {
+    playButtonSound();
     navigateTo("listing");
   };
 

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useButtonSound } from "../hooks/useButtonSound";
 import "./VirtualKeyboard.css";
 
 interface VirtualKeyboardProps {
@@ -14,6 +15,7 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
   onInput,
   currentValue,
 }) => {
+  const playButtonSound = useButtonSound();
   const [isShiftPressed, setIsShiftPressed] = useState(false);
   const [isCapsLock, setIsCapsLock] = useState(false);
 
@@ -39,6 +41,7 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
   ];
 
   const handleKeyPress = (key: string) => {
+    playButtonSound();
     switch (key) {
       case "backspace":
         onInput(currentValue.slice(0, -1));

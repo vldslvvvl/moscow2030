@@ -1,5 +1,6 @@
 import React from "react";
 import { usePageContext } from "../context/PageContext";
+import { useButtonSound } from "../hooks/useButtonSound";
 import "./WinModal.css";
 import trophyImage from "../assets/images/win.png";
 
@@ -17,8 +18,10 @@ const WinModal: React.FC<WinModalProps> = ({
   winningBid,
 }) => {
   const { navigateTo } = usePageContext();
+  const playButtonSound = useButtonSound();
 
   const handleGoToPortal = () => {
+    playButtonSound();
     navigateTo("docs");
   };
 

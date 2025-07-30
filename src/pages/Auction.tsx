@@ -14,7 +14,7 @@ interface Participant {
 }
 
 const Auction: React.FC = () => {
-  const { navigateTo, auctionData } = usePageContext();
+  const { auctionData } = usePageContext();
   const [timeLeft, setTimeLeft] = useState(30);
 
   // Функция для расчета изначального бюджета (цена объекта + 30%)

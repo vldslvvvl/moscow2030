@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Header from "../components/Header";
 import { usePageContext } from "../context/PageContext";
+import { useButtonSound } from "../hooks/useButtonSound";
 import "./Docs.css";
 import starIcon from "../assets/icons/star.svg";
 import doc1Image from "../assets/images/doc1.jpg";
@@ -11,6 +12,7 @@ import backgroundVideo from "../assets/images/background-bot-2.MOV";
 
 const Docs: React.FC = () => {
   const { navigateTo } = usePageContext();
+  const playButtonSound = useButtonSound();
   const [edsSigned, setEdsSigned] = useState(false);
   const [isEdsLoading, setIsEdsLoading] = useState(false);
   const [loadingText, setLoadingText] = useState("");
@@ -19,6 +21,7 @@ const Docs: React.FC = () => {
   >(null);
 
   const handleSignEDS = () => {
+    playButtonSound();
     setIsEdsLoading(true);
     setLoadingText("Поднимаем архивы...");
 
@@ -47,12 +50,14 @@ const Docs: React.FC = () => {
 
   const handlePaymentSelect = (payment: "cash" | "mortgage") => {
     if (edsSigned) {
+      playButtonSound();
       setSelectedPayment(payment);
     }
   };
 
   const handleFormalize = () => {
     if (edsSigned && selectedPayment) {
+      playButtonSound();
       console.log("Оформление с оплатой:", selectedPayment);
       // Переход на страницу завершения
       navigateTo("finish");

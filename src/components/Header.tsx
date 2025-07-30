@@ -1,7 +1,6 @@
 import React from "react";
 import logo from "../assets/logo.svg";
-import userIcon from "../assets/icons/user.png";
-import arrowLeftIcon from "../assets/icons/arrow-left.svg";
+import { useButtonSound } from "../hooks/useButtonSound";
 import "./Header.css";
 
 interface HeaderProps {
@@ -13,6 +12,7 @@ const Header: React.FC<HeaderProps> = ({
   showBackButton = false,
   onBackClick,
 }) => {
+  const playButtonSound = useButtonSound();
   return (
     <header className="header">
       <div className="logo">
@@ -20,7 +20,13 @@ const Header: React.FC<HeaderProps> = ({
       </div>
       <div className="header-actions">
         {showBackButton && (
-          <button className="back-button" onClick={onBackClick}>
+          <button
+            className="back-button"
+            onClick={() => {
+              playButtonSound();
+              onBackClick?.();
+            }}
+          >
             <svg
               width="50"
               height="50"

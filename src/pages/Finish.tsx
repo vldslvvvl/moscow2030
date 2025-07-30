@@ -1,15 +1,18 @@
 import React, { useCallback } from "react";
 import Header from "../components/Header";
 import { usePageContext } from "../context/PageContext";
+import { useButtonSound } from "../hooks/useButtonSound";
 import "./Finish.css";
 import qrImage from "../assets/images/qr.png";
 import backgroundVideo from "../assets/images/background-bot-2.MOV";
 
 const Finish: React.FC = () => {
   const { navigateTo } = usePageContext();
+  const playButtonSound = useButtonSound();
 
   const handleReturnToCatalog = () => {
     console.log("Возврат в каталог");
+    playButtonSound();
     navigateTo("listing");
   };
 

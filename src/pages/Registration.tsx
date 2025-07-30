@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from "react";
 import Header from "../components/Header";
 import { usePageContext } from "../context/PageContext";
+import { useButtonSound } from "../hooks/useButtonSound";
 import VirtualKeyboard from "../components/VirtualKeyboard";
 import "./Registration.css";
 import starIcon from "../assets/icons/star.svg";
@@ -9,6 +10,7 @@ import backgroundVideo from "../assets/images/background-bot-2.MOV";
 const Registration: React.FC = () => {
   const { navigateTo, auctionData } = usePageContext();
   const [name, setName] = useState("");
+  const playButtonSound = useButtonSound();
   // Удаляем статический баланс, теперь он будет вычисляться динамически
   const [edsReceived, setEdsReceived] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -30,6 +32,7 @@ const Registration: React.FC = () => {
   };
 
   const handleGetEDS = () => {
+    playButtonSound();
     setIsEdsLoading(true);
     setLoadingText("Поднимаем архивы...");
 
@@ -58,6 +61,7 @@ const Registration: React.FC = () => {
 
   const handleSubmitApplication = () => {
     if (name.trim()) {
+      playButtonSound();
       // Логика подачи заявки
       console.log("Подача заявки:", name);
       setIsLoading(true);
@@ -69,6 +73,7 @@ const Registration: React.FC = () => {
   };
 
   const handleInputClick = () => {
+    playButtonSound();
     setIsKeyboardVisible(true);
   };
 

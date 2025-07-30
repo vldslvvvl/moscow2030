@@ -1,5 +1,6 @@
 import React from "react";
 import { usePageContext } from "../context/PageContext";
+import { useButtonSound } from "../hooks/useButtonSound";
 import "./LoseModal.css";
 
 interface LoseModalProps {
@@ -14,12 +15,15 @@ const LoseModal: React.FC<LoseModalProps> = ({
   userBudget,
 }) => {
   const { navigateTo } = usePageContext();
+  const playButtonSound = useButtonSound();
 
   const handleChooseAnother = () => {
+    playButtonSound();
     navigateTo("listing");
   };
 
   const handleStay = () => {
+    playButtonSound();
     onClose();
   };
 

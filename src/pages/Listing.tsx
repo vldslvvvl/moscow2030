@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from "react";
 import Header from "../components/Header";
 import { usePageContext, PropertyDetails } from "../context/PageContext";
+import { useButtonSound } from "../hooks/useButtonSound";
 import homeLayoutIcon from "../assets/icons/home-layout.svg";
 import carGarageIcon from "../assets/icons/car-garage.svg";
 import teaCoffeeIcon from "../assets/icons/tea-coffee.svg";
@@ -35,6 +36,7 @@ const Listing: React.FC = () => {
     activePropertyType,
     setActivePropertyType,
   } = usePageContext();
+  const playButtonSound = useButtonSound();
   const [activeTab, setActiveTab] = useState<
     "apartment" | "parking" | "commercial"
   >(activePropertyType);
@@ -320,6 +322,7 @@ const Listing: React.FC = () => {
   const handleTabClick = (type: "apartment" | "parking" | "commercial") => {
     if (activeTab === type) return;
 
+    playButtonSound();
     setIsChanging(true);
 
     setTimeout(() => {
@@ -334,6 +337,7 @@ const Listing: React.FC = () => {
 
   const handleBuyClick = (item: PropertyItem) => {
     console.log("Покупка:", item);
+    playButtonSound();
 
     // Извлекаем числовую цену из строки
     const priceMatch = item.price.match(/[\d\s]+/);
@@ -353,6 +357,7 @@ const Listing: React.FC = () => {
 
   const handleDetailsClick = (item: PropertyItem) => {
     console.log("Детали:", item);
+    playButtonSound();
 
     const propertyDetails: PropertyDetails = {
       id: item.id,

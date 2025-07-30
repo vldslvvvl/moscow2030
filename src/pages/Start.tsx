@@ -1,13 +1,16 @@
 import React from "react";
 import Header from "../components/Header";
 import { usePageContext } from "../context/PageContext";
+import { useButtonSound } from "../hooks/useButtonSound";
 import "./Start.css";
 import videoFile from "../assets/images/background.mp4";
 
 const Start: React.FC = () => {
   const { navigateTo } = usePageContext();
+  const playButtonSound = useButtonSound();
 
   const handleStartClick = () => {
+    playButtonSound();
     navigateTo("introduction");
   };
 

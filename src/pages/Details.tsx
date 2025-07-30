@@ -2,6 +2,7 @@ import React, { useState, useMemo, useCallback } from "react";
 import Header from "../components/Header";
 import OptimizedImage from "../components/OptimizedImage";
 import { usePageContext } from "../context/PageContext";
+import { useButtonSound } from "../hooks/useButtonSound";
 import "./Details.css";
 
 import backgroundVideo from "../assets/images/background-bot-2.MOV";
@@ -9,6 +10,7 @@ import backgroundVideo from "../assets/images/background-bot-2.MOV";
 const Details: React.FC = () => {
   const { navigateTo, propertyDetails, setAuctionData } = usePageContext();
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const playButtonSound = useButtonSound();
 
   // Проверяем, есть ли данные о недвижимости
   if (!propertyDetails) {
@@ -18,16 +20,19 @@ const Details: React.FC = () => {
   }
 
   const handleThumbnailClick = useCallback((index: number) => {
+    playButtonSound();
     setSelectedImageIndex(index);
   }, []);
 
   const handleContractForm = useCallback(() => {
     console.log("Открытие бланка договора");
+    playButtonSound();
     // Здесь будет логика открытия бланка договора
   }, []);
 
   const handleGoToTrading = useCallback(() => {
     console.log("Переход на торговую площадку");
+    playButtonSound();
 
     // Извлекаем числовую цену из строки
     const priceMatch = propertyDetails.price.match(/[\d\s]+/);
