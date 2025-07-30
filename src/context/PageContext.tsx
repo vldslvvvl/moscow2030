@@ -43,6 +43,8 @@ interface PageContextType {
   setAuctionData: (data: AuctionData | null) => void;
   propertyDetails: PropertyDetails | null;
   setPropertyDetails: (data: PropertyDetails | null) => void;
+  activePropertyType: "apartment" | "parking" | "commercial";
+  setActivePropertyType: (type: "apartment" | "parking" | "commercial") => void;
 }
 
 const PageContext = createContext<PageContextType | undefined>(undefined);
@@ -64,6 +66,9 @@ export const PageProvider: React.FC<PageProviderProps> = ({ children }) => {
   const [auctionData, setAuctionData] = useState<AuctionData | null>(null);
   const [propertyDetails, setPropertyDetails] =
     useState<PropertyDetails | null>(null);
+  const [activePropertyType, setActivePropertyType] = useState<
+    "apartment" | "parking" | "commercial"
+  >("apartment");
 
   const navigateTo = useCallback((page: PageType) => {
     setCurrentPage(page);
@@ -77,6 +82,8 @@ export const PageProvider: React.FC<PageProviderProps> = ({ children }) => {
       setAuctionData,
       propertyDetails,
       setPropertyDetails,
+      activePropertyType,
+      setActivePropertyType,
     }),
     [
       currentPage,
@@ -85,6 +92,8 @@ export const PageProvider: React.FC<PageProviderProps> = ({ children }) => {
       setAuctionData,
       propertyDetails,
       setPropertyDetails,
+      activePropertyType,
+      setActivePropertyType,
     ]
   );
 

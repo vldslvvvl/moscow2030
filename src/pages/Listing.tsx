@@ -28,10 +28,16 @@ interface TabData {
 }
 
 const Listing: React.FC = () => {
-  const { navigateTo, setAuctionData, setPropertyDetails } = usePageContext();
+  const {
+    navigateTo,
+    setAuctionData,
+    setPropertyDetails,
+    activePropertyType,
+    setActivePropertyType,
+  } = usePageContext();
   const [activeTab, setActiveTab] = useState<
     "apartment" | "parking" | "commercial"
-  >("apartment");
+  >(activePropertyType);
   const [isChanging, setIsChanging] = useState(false);
 
   const tabs: TabData[] = [
@@ -160,11 +166,7 @@ const Listing: React.FC = () => {
       price: "3 200 000 ₽",
       image: "/src/assets/images/mock/carplace1.PNG",
       mainImage: "/src/assets/images/mock/carplace1.PNG",
-      thumbnails: [
-        "/src/assets/images/mock/carplace1.PNG",
-        "/src/assets/images/mock/carplace2.PNG",
-        "/src/assets/images/mock/carplace3.PNG",
-      ],
+      thumbnails: ["/src/assets/images/mock/carplace1.PNG"],
       advantages: [
         "прозрачные условия сделки",
         "заключение договора напрямую с городом без посредников",
@@ -180,11 +182,7 @@ const Listing: React.FC = () => {
       price: "1 800 000 ₽",
       image: "/src/assets/images/mock/carplace2.PNG",
       mainImage: "/src/assets/images/mock/carplace2.PNG",
-      thumbnails: [
-        "/src/assets/images/mock/carplace2.PNG",
-        "/src/assets/images/mock/carplace1.PNG",
-        "/src/assets/images/mock/carplace4.PNG",
-      ],
+      thumbnails: ["/src/assets/images/mock/carplace2.PNG"],
       advantages: [
         "прозрачные условия сделки",
         "заключение договора напрямую с городом без посредников",
@@ -200,11 +198,7 @@ const Listing: React.FC = () => {
       price: "2 500 000 ₽",
       image: "/src/assets/images/mock/carplace3.PNG",
       mainImage: "/src/assets/images/mock/carplace3.PNG",
-      thumbnails: [
-        "/src/assets/images/mock/carplace3.PNG",
-        "/src/assets/images/mock/carplace1.PNG",
-        "/src/assets/images/mock/carplace2.PNG",
-      ],
+      thumbnails: ["/src/assets/images/mock/carplace3.PNG"],
       advantages: [
         "прозрачные условия сделки",
         "заключение договора напрямую с городом без посредников",
@@ -220,11 +214,7 @@ const Listing: React.FC = () => {
       price: "2 900 000 ₽",
       image: "/src/assets/images/mock/carplace4.PNG",
       mainImage: "/src/assets/images/mock/carplace4.PNG",
-      thumbnails: [
-        "/src/assets/images/mock/carplace4.PNG",
-        "/src/assets/images/mock/carplace1.PNG",
-        "/src/assets/images/mock/carplace3.PNG",
-      ],
+      thumbnails: ["/src/assets/images/mock/carplace4.PNG"],
       advantages: [
         "прозрачные условия сделки",
         "заключение договора напрямую с городом без посредников",
@@ -334,6 +324,7 @@ const Listing: React.FC = () => {
 
     setTimeout(() => {
       setActiveTab(type);
+      setActivePropertyType(type);
       // Даем время на рендеринг новых карточек перед началом анимации появления
       setTimeout(() => {
         setIsChanging(false);
