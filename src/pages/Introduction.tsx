@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import Header from "../components/Header";
 import { usePageContext } from "../context/PageContext";
 import "./Introduction.css";
@@ -52,9 +52,13 @@ const Introduction: React.FC = () => {
     navigateTo("listing");
   };
 
+  const handleBackClick = useCallback(() => {
+    navigateTo("start");
+  }, [navigateTo]);
+
   return (
     <div className="introduction-page">
-      <Header />
+      <Header showBackButton={true} onBackClick={handleBackClick} />
       <main className="introduction-content">
         <div className="introduction-container">
           <p className="introduction-title">ИНСТРУКЦИЯ ПЕРЕД НАЧАЛОМ</p>

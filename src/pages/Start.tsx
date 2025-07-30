@@ -16,7 +16,7 @@ const Start: React.FC = () => {
       <Header />
       <main className="start-content">
         <div className="start-content-container">
-          <h1 style={{ marginBottom: "64px" }}>
+          <h1 className="start-title" style={{ marginBottom: "64px" }}>
             <span className="white-text">Купи</span> <br />
             <span className="gradient-text">недвижимость</span>
             <br />

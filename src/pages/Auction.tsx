@@ -15,7 +15,7 @@ interface Participant {
 
 const Auction: React.FC = () => {
   const { navigateTo, auctionData } = usePageContext();
-  const [timeLeft, setTimeLeft] = useState(300);
+  const [timeLeft, setTimeLeft] = useState(30);
 
   // Функция для расчета изначального бюджета (цена объекта + 30%)
   const calculateInitialBudget = (): number => {
@@ -39,7 +39,7 @@ const Auction: React.FC = () => {
 
   const [participants, setParticipants] = useState<Participant[]>([
     { id: "user", name: "Вы", bid: initialBid, isUser: true },
-    { id: "alexey", name: "Алексей", bid: initialBid - 1000000, isUser: false },
+    { id: "alexey", name: "Алексей", bid: initialBid, isUser: false },
     { id: "oleg", name: "Олег", bid: initialBid, isUser: false },
   ]);
 
@@ -86,13 +86,25 @@ const Auction: React.FC = () => {
 
         return newTime;
       });
+
+      // Асинхронное увеличение ставок других участников
+      setParticipants((prevParticipants) => {
+        const bidIncrement = auctionData?.type === "parking" ? 50000 : 100000;
+        return prevParticipants.map((participant) => {
+          if (!participant.isUser) {
+            return { ...participant, bid: participant.bid + bidIncrement };
+          }
+          return participant;
+        });
+      });
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [timeLeft, participants]);
+  }, [timeLeft, auctionData?.type]);
 
   const handleIncreaseBid = useCallback(() => {
-    const increaseAmount = 100000;
+    // Динамическое определение суммы увеличения ставки в зависимости от типа объекта
+    const increaseAmount = auctionData?.type === "parking" ? 50000 : 100000;
 
     setParticipants((prev) => {
       const currentUserBid = prev.find((p) => p.isUser)?.bid || 0;
@@ -106,7 +118,7 @@ const Auction: React.FC = () => {
 
       return prev; // Не изменяем состояние если недостаточно бюджета
     });
-  }, [initialBudget]);
+  }, [initialBudget, auctionData?.type]);
 
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
@@ -176,7 +188,10 @@ const Auction: React.FC = () => {
                 strokeLinejoin="round"
               />
             </svg>
-            <span>Увеличить ставку на 100 000₽</span>
+            <span>
+              Увеличить ставку на{" "}
+              {auctionData?.type === "parking" ? "50 000" : "100 000"}₽
+            </span>
           </button>
 
           {/* Изометрическая визуализация участников */}

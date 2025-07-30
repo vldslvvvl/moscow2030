@@ -29,7 +29,7 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  height: 800px;
+  height: 680px;
   width: 950px;
   max-width: 1000px;
   perspective: 800px;
@@ -37,11 +37,10 @@
 
 .bar-container {
   flex: 1;
-  height: 100%;
+  height: 90%;
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  max-width: 190px;
 }
 
 .isometric-bar {
@@ -57,7 +56,7 @@
 /* Передняя грань */
 .bar-face.front {
   position: absolute;
-  width: 100%;
+  width: 50%;
   height: 100%;
   transform-origin: bottom;
 }
@@ -65,9 +64,9 @@
 /* Верхняя грань */
 .bar-face.top {
   position: absolute;
-  width: 100%;
-  height: 80px;
-  top: -79px;
+  width: 50%;
+  height: 160px;
+  top: -160px;
   transform-origin: bottom;
   transform: rotateX(90deg);
 }
@@ -75,9 +74,9 @@
 /* Правая грань */
 .bar-face.right {
   position: absolute;
-  width: 80px;
+  width: 50%;
   height: 100%;
-  right: -80px;
+  right: 0px;
   transform-origin: left;
   transform: rotateY(90deg);
 }
@@ -152,6 +151,77 @@
   100% {
     background-position: 0% 50%;
   }
+}
+
+/* Анимация свечения для побеждающего бара */
+@keyframes winningGlow {
+  0% {
+    box-shadow: 
+      0 0 10px rgba(0, 255, 0, 0.6),
+      0 0 20px rgba(0, 255, 0, 0.4),
+      0 0 30px rgba(0, 255, 0, 0.3);
+  }
+  50% {
+    box-shadow: 
+      0 0 15px rgba(0, 255, 0, 1),
+      0 0 30px rgba(0, 255, 0, 0.8),
+      0 0 45px rgba(0, 255, 0, 0.6);
+  }
+  100% {
+    box-shadow: 
+      0 0 10px rgba(0, 255, 0, 0.6),
+      0 0 20px rgba(0, 255, 0, 0.4),
+      0 0 30px rgba(0, 255, 0, 0.3);
+  }
+}
+
+@keyframes winningGlowBack {
+  0% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+}
+
+/* Стили для побеждающего бара */
+.winning-bar {
+  position: relative;
+}
+
+/* Фоновое свечение */
+.winning-bar::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  left: -30px;
+  right: -30px;
+  bottom: -30px;
+  background: radial-gradient(circle, rgba(0, 255, 0, 0.8) 0%, rgba(0, 200, 0, 0.4) 40%, transparent 70%);
+  border-radius: 50%;
+  z-index: -1;
+  animation: winningGlowBack 2s ease-in-out infinite;
+  filter: blur(20px);
+  pointer-events: none;
+}
+
+/* Свечение для каждой грани */
+.winning-bar .bar-face.front {
+  animation: winningGlow 2s ease-in-out infinite;
+}
+
+.winning-bar .bar-face.top {
+  animation: winningGlow 2s ease-in-out infinite;
+}
+
+.winning-bar .bar-face.right {
+  animation: winningGlow 2s ease-in-out infinite;
 }
 
 /* Эффект при наведении */

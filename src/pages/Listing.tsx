@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import Header from "../components/Header";
 import { usePageContext, PropertyDetails } from "../context/PageContext";
 import homeLayoutIcon from "../assets/icons/home-layout.svg";
@@ -59,17 +59,17 @@ const Listing: React.FC = () => {
     {
       id: 1,
       type: "apartment",
-      title: "2-комн. квартира на продажу, 68,3 м²",
-      price: "26 418 440 ₽",
-      image: "/src/assets/images/mock/1/Гостиная.png",
-      area: "68,3м²",
+      title: "2-комн. квартира на продажу, 72,3 м²",
+      price: "13 751 460 ₽",
+      image: "/src/assets/images/mock/n/1/preview.jpg",
+      area: "72,3м²",
       rooms: 1,
-      mainImage: "/src/assets/images/mock/1/Гостиная.png",
+      mainImage: "/src/assets/images/mock/n/1/room2.jpg",
       thumbnails: [
-        "/src/assets/images/mock/1/Гостиная.png",
-        "/src/assets/images/mock/1/комната.png",
-        "/src/assets/images/mock/1/кухня.png",
-        "/src/assets/images/mock/1/ванная и туалет.png",
+        "/src/assets/images/mock/n/1/preview.jpg",
+        "/src/assets/images/mock/n/1/room.jpg",
+        "/src/assets/images/mock/n/1/room2.jpg",
+        "/src/assets/images/mock/n/1/corridor.jpg",
       ],
       advantages: [
         "прозрачные условия сделки",
@@ -82,17 +82,17 @@ const Listing: React.FC = () => {
     {
       id: 2,
       type: "apartment",
-      title: "1-комн. квартира на продажу, 41,4 м²",
-      price: "16 663 500 ₽",
-      image: "/src/assets/images/mock/2/комната.png",
-      area: "45м²",
+      title: "1-комн. квартира на продажу, 37,6 м²",
+      price: "8 305 840 ₽",
+      image: "/src/assets/images/mock/n/2/preview.jpg",
+      area: "37,6м²",
       rooms: 2,
-      mainImage: "/src/assets/images/mock/2/комната.png",
+      mainImage: "/src/assets/images/mock/n/2/room.jpg",
       thumbnails: [
-        "/src/assets/images/mock/2/Гостиная.png",
-        "/src/assets/images/mock/2/комната.png",
-        "/src/assets/images/mock/2/кухня.png",
-        "/src/assets/images/mock/2/ванная.png",
+        "/src/assets/images/mock/n/2/preview.jpg",
+        "/src/assets/images/mock/n/2/room.jpg",
+        "/src/assets/images/mock/n/2/room2.jpg",
+        "/src/assets/images/mock/n/2/room3.jpg",
       ],
       advantages: [
         "прозрачные условия сделки",
@@ -105,17 +105,17 @@ const Listing: React.FC = () => {
     {
       id: 3,
       type: "apartment",
-      title: "1-комн. квартира на продажу, 45 м²",
-      price: "9 243 000 ₽",
-      image: "/src/assets/images/mock/3/прихожая.png",
-      area: "45м²",
+      title: "4-комн. квартира на продажу, 101,9 м²",
+      price: "18 199 340 ₽",
+      image: "/src/assets/images/mock/n/3/preview.jpg",
+      area: "101,9м²",
       rooms: 1,
-      mainImage: "/src/assets/images/mock/3/прихожая.png",
+      mainImage: "/src/assets/images/mock/n/3/view.jpg",
       thumbnails: [
-        "/src/assets/images/mock/3/прихожая.png",
-        "/src/assets/images/mock/3/комната.png",
-        "/src/assets/images/mock/3/кухня.png",
-        "/src/assets/images/mock/3/туалет.png",
+        "/src/assets/images/mock/n/3/preview.jpg",
+        "/src/assets/images/mock/n/3/view.jpg",
+        "/src/assets/images/mock/n/3/view2.jpg",
+        "/src/assets/images/mock/n/3/view3.jpg",
       ],
       advantages: [
         "прозрачные условия сделки",
@@ -128,17 +128,17 @@ const Listing: React.FC = () => {
     {
       id: 4,
       type: "apartment",
-      title: "3-комн. квартира на продажу, 74,4 м²",
-      price: "14 574 960 ₽",
-      image: "/src/assets/images/mock/4/Комната.png",
-      area: "92м²",
+      title: "3-комн. квартира на продажу, 76,8 м²",
+      price: "13 516 800 ₽",
+      image: "/src/assets/images/mock/n/4/preview.jpg",
+      area: "76,8м²",
       rooms: 4,
-      mainImage: "/src/assets/images/mock/4/Комната.png",
+      mainImage: "/src/assets/images/mock/n/4/view.jpg",
       thumbnails: [
-        "/src/assets/images/mock/4/прихожая.png",
-        "/src/assets/images/mock/4/комната.png",
-        "/src/assets/images/mock/4/кухня.png",
-        "/src/assets/images/mock/4/ванная.png",
+        "/src/assets/images/mock/n/4/preview.jpg",
+        "/src/assets/images/mock/n/4/view.jpg",
+        "/src/assets/images/mock/n/4/view1.jpg",
+        "/src/assets/images/mock/n/4/view3.jpg",
       ],
       advantages: [
         "прозрачные условия сделки",
@@ -156,7 +156,7 @@ const Listing: React.FC = () => {
       type: "parking",
       title: "Москва, ЦАО, р-н Пресненский, Краснопресненская наб., 14Ак1",
       price: "3 200 000 ₽",
-      image: "carplace1.PNG",
+      image: "/src/assets/images/mock/carplace1.PNG",
       mainImage: "/src/assets/images/mock/carplace1.PNG",
       thumbnails: [
         "/src/assets/images/mock/carplace1.PNG",
@@ -176,7 +176,7 @@ const Listing: React.FC = () => {
       type: "parking",
       title: "Москва, ЗАО, р-н Очаково-Матвеевское, Очаковское ш., 5к4",
       price: "1 800 000 ₽",
-      image: "carplace2.PNG",
+      image: "/src/assets/images/mock/carplace2.PNG",
       mainImage: "/src/assets/images/mock/carplace2.PNG",
       thumbnails: [
         "/src/assets/images/mock/carplace2.PNG",
@@ -196,7 +196,7 @@ const Listing: React.FC = () => {
       type: "parking",
       title: "Москва, ЦАО, р-н Тверской, 2-я Брестская ул., 8",
       price: "2 500 000 ₽",
-      image: "carplace3.PNG",
+      image: "/src/assets/images/mock/carplace3.PNG",
       mainImage: "/src/assets/images/mock/carplace3.PNG",
       thumbnails: [
         "/src/assets/images/mock/carplace3.PNG",
@@ -216,7 +216,7 @@ const Listing: React.FC = () => {
       type: "parking",
       title: "Москва, САО, р-н Хорошевский, Хорошевское ш., 25Ак2",
       price: "2 900 000 ₽",
-      image: "carplace4.PNG",
+      image: "/src/assets/images/mock/carplace4.PNG",
       mainImage: "/src/assets/images/mock/carplace4.PNG",
       thumbnails: [
         "/src/assets/images/mock/carplace4.PNG",
@@ -239,13 +239,13 @@ const Listing: React.FC = () => {
       type: "commercial",
       title: "Коммерческое помещение, 120м²",
       price: "45 000 000 ₽",
-      image: "кухня 3.jpg",
+      image: "/src/assets/images/mock/bus1.jpg",
       area: "120м²",
-      mainImage: "/src/assets/images/mock/кухня 3.jpg",
+      mainImage: "/src/assets/images/mock/bus1.jpg",
       thumbnails: [
-        "/src/assets/images/mock/кухня 3.jpg",
-        "/src/assets/images/mock/спальня 1.jpg",
-        "/src/assets/images/mock/ванная 1.jpg",
+        "/src/assets/images/mock/bus1.jpg",
+        "/src/assets/images/mock/bus2.jpg",
+        "/src/assets/images/mock/bus3.jpg",
       ],
       advantages: [
         "прозрачные условия сделки",
@@ -260,13 +260,13 @@ const Listing: React.FC = () => {
       type: "commercial",
       title: "Офисное помещение, 85м²",
       price: "28 000 000 ₽",
-      image: "кухня 4.jpg",
+      image: "/src/assets/images/mock/bus4.jpg",
       area: "85м²",
-      mainImage: "/src/assets/images/mock/кухня 4.jpg",
+      mainImage: "/src/assets/images/mock/bus4.jpg",
       thumbnails: [
-        "/src/assets/images/mock/кухня 4.jpg",
-        "/src/assets/images/mock/спальня 2.jpg",
-        "/src/assets/images/mock/ванная 2.jpg",
+        "/src/assets/images/mock/bus4.jpg",
+        "/src/assets/images/mock/bus5.jpg",
+        "/src/assets/images/mock/bus6.jpg",
       ],
       advantages: [
         "прозрачные условия сделки",
@@ -281,14 +281,10 @@ const Listing: React.FC = () => {
       type: "commercial",
       title: "Торговое помещение, 200м²",
       price: "65 000 000 ₽",
-      image: "спальня 1.jpg",
+      image: "/src/assets/images/mock/bus7.jpg",
       area: "200м²",
-      mainImage: "/src/assets/images/mock/спальня 1.jpg",
-      thumbnails: [
-        "/src/assets/images/mock/спальня 1.jpg",
-        "/src/assets/images/mock/кухня 1.jpg",
-        "/src/assets/images/mock/ванная 1.jpg",
-      ],
+      mainImage: "/src/assets/images/mock/bus7.jpg",
+      thumbnails: ["/src/assets/images/mock/bus7.jpg"],
       advantages: [
         "прозрачные условия сделки",
         "заключение договора напрямую с городом без посредников",
@@ -302,14 +298,10 @@ const Listing: React.FC = () => {
       type: "commercial",
       title: "Складское помещение, 350м²",
       price: "95 000 000 ₽",
-      image: "спальня 2.jpg",
+      image: "/src/assets/images/mock/bus8.jpg",
       area: "350м²",
-      mainImage: "/src/assets/images/mock/спальня 2.jpg",
-      thumbnails: [
-        "/src/assets/images/mock/спальня 2.jpg",
-        "/src/assets/images/mock/кухня 2.jpg",
-        "/src/assets/images/mock/ванная 2.jpg",
-      ],
+      mainImage: "/src/assets/images/mock/bus8.jpg",
+      thumbnails: ["/src/assets/images/mock/bus8.jpg"],
       advantages: [
         "прозрачные условия сделки",
         "заключение договора напрямую с городом без посредников",
@@ -340,9 +332,10 @@ const Listing: React.FC = () => {
 
     setTimeout(() => {
       setActiveTab(type);
+      // Даем время на рендеринг новых карточек перед началом анимации появления
       setTimeout(() => {
         setIsChanging(false);
-      }, 50);
+      }, 100);
     }, 300);
   };
 
@@ -385,9 +378,13 @@ const Listing: React.FC = () => {
     navigateTo("details");
   };
 
+  const handleBackClick = useCallback(() => {
+    navigateTo("introduction");
+  }, [navigateTo]);
+
   return (
     <div className="listing-page">
-      <Header showBackButton={false} />
+      <Header showBackButton={true} onBackClick={handleBackClick} />
       <main className="listing-content">
         <div className="listing-container">
           <nav className="listing-tabs">

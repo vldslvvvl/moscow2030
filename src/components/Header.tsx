@@ -45,9 +45,6 @@ const Header: React.FC<HeaderProps> = ({
             </svg>
           </button>
         )}
-        <div className="user-icon">
-          <img src={userIcon} alt="Пользователь" width="52" height="52" />
-        </div>
       </div>
     </header>
   );

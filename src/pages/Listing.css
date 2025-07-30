@@ -166,22 +166,23 @@
 
 /* Улучшенная анимация смены контента */
 .property-grid {
-z-index: 10;
+  z-index: 10;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 24px;
   width: 100%;
   flex: 1;
-  overflow-y: auto;
+  overflow-y: hidden;
   padding-right: 8px;
   opacity: 1;
   transform: translateY(0);
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity, transform;
 }
 
 .property-grid.changing {
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateY(30px);
 }
 
 .property-grid::-webkit-scrollbar {
@@ -208,18 +209,41 @@ z-index: 10;
   backdrop-filter: blur(10px);
   display: flex;
   flex-direction: column;
-  animation: cardFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  width: 100%;
+  height: auto;
+  min-height: 350px;
+  box-sizing: border-box;
 }
 
-.property-card:nth-child(1) { animation-delay: 0.1s; }
-.property-card:nth-child(2) { animation-delay: 0.2s; }
-.property-card:nth-child(3) { animation-delay: 0.3s; }
-.property-card:nth-child(4) { animation-delay: 0.4s; }
+/* Анимация появления карточек при первой загрузке */
+.property-grid:not(.changing) .property-card {
+  animation: cardSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+  will-change: transform, opacity;
+}
 
-@keyframes cardFadeIn {
+.property-grid:not(.changing) .property-card:nth-child(1) { animation-delay: 0.1s; }
+.property-grid:not(.changing) .property-card:nth-child(2) { animation-delay: 0.2s; }
+.property-grid:not(.changing) .property-card:nth-child(3) { animation-delay: 0.3s; }
+.property-grid:not(.changing) .property-card:nth-child(4) { animation-delay: 0.4s; }
+
+/* Простая анимация появления при смене табов */
+.property-grid.changing .property-card {
+  opacity: 0;
+  transform: translateY(20px) scale(0.98);
+  will-change: transform, opacity;
+}
+
+/* Убираем will-change после завершения анимаций для экономии памяти */
+.property-card:not(:hover) {
+  will-change: auto;
+}
+
+@keyframes cardSlideIn {
   0% {
     opacity: 0;
-    transform: translateY(30px) scale(0.95);
+    transform: translateY(40px) scale(0.95);
   }
   100% {
     opacity: 1;
@@ -228,9 +252,16 @@ z-index: 10;
 }
 
 .property-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-4px) scale(1);
   border-color: rgba(0, 202, 241, 0.3);
   box-shadow: 0 8px 32px rgba(0, 202, 241, 0.2);
+}
+
+/* Отключаем ховер во время анимации смены табов */
+.property-grid.changing .property-card:hover {
+  transform: translateY(20px) scale(0.98);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: none;
 }
 
 .property-image {

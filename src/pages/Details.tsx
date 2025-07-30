@@ -166,7 +166,7 @@ const Details: React.FC = () => {
                   <span className="price">{propertyDetails.price}</span>
                 </div>
                 <button className="trading-button" onClick={handleGoToTrading}>
-                  ПЕРЕЙТИ НА ТОРГОВУЮ ПЛОЩАДКУ →
+                  ПЕРЕЙТИ НА ТОРГОВУЮ ПЛОЩАДКУ
                   <svg
                     className="arrow-icon"
                     width="16"

@@ -21,6 +21,16 @@ const IsometricBars: React.FC<IsometricBarsProps> = ({
     return amount.toLocaleString("ru-RU");
   };
 
+  // Определяем побеждающего участника (с максимальной ставкой)
+  const getWinningParticipant = (): Participant | null => {
+    if (participants.length === 0) return null;
+    return participants.reduce((winner, current) =>
+      current.bid > winner.bid ? current : winner
+    );
+  };
+
+  const winningParticipant = getWinningParticipant();
+
   return (
     <div className="isometric-bars-container">
       {/* Значения ставок */}
@@ -36,6 +46,8 @@ const IsometricBars: React.FC<IsometricBarsProps> = ({
       <div className="bars-wrapper">
         {participants.map((participant, index) => {
           const height = (participant.bid / maxBid) * 100; // Процент от максимальной высоты
+          const isWinning =
+            winningParticipant && participant.id === winningParticipant.id;
 
           return (
             <div
@@ -43,10 +55,19 @@ const IsometricBars: React.FC<IsometricBarsProps> = ({
               className="bar-container"
               style={{ "--bar-height": `${height}%` } as React.CSSProperties}
             >
+              {/* Прямоугольная подсветка для побеждающего бара */}
+              {isWinning && (
+                <div
+                  className="winning-glow-shape"
+                  style={
+                    { "--bar-height": `${height}%` } as React.CSSProperties
+                  }
+                />
+              )}
               <div
                 className={`isometric-bar ${
                   participant.isUser ? "user-bar" : "other-bar"
-                }`}
+                } ${isWinning ? "winning-bar" : ""}`}
               >
                 {/* Передняя грань */}
                 <div className="bar-face front"></div>

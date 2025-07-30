@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import Header from "../components/Header";
 import { usePageContext } from "../context/PageContext";
 import VirtualKeyboard from "../components/VirtualKeyboard";
@@ -80,9 +80,13 @@ const Registration: React.FC = () => {
     setIsKeyboardVisible(false);
   };
 
+  const handleBackClick = useCallback(() => {
+    navigateTo("details");
+  }, [navigateTo]);
+
   return (
     <div className="registration-page">
-      <Header />
+      <Header showBackButton={true} onBackClick={handleBackClick} />
       <main className="registration-content">
         <div className="registration-container">
           <h1 className="registration-title">

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import Header from "../components/Header";
 import { usePageContext } from "../context/PageContext";
 import "./Finish.css";
@@ -13,9 +13,13 @@ const Finish: React.FC = () => {
     navigateTo("listing");
   };
 
+  const handleBackClick = useCallback(() => {
+    navigateTo("docs");
+  }, [navigateTo]);
+
   return (
     <div className="finish-page">
-      <Header />
+      <Header showBackButton={true} onBackClick={handleBackClick} />
       <main className="finish-content">
         <div className="finish-container">
           <h1 className="finish-title">

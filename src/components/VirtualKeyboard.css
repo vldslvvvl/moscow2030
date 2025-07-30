@@ -71,7 +71,7 @@
 .keyboard-row {
   display: flex;
   justify-content: center;
-  gap: 11px;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
