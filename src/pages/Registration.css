@@ -374,6 +374,37 @@
   }
 }
 
+/* Стили для неактивной панели */
+.panel-disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  filter: grayscale(0.3);
+  transition: all 0.3s ease;
+}
+
+.panel-disabled:hover {
+  transform: none;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.panel-disabled::before {
+  animation: none;
+  box-shadow: none;
+}
+
+.panel-disabled .name-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.panel-disabled .submit-button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
 /* Стили для правой панели (Форма) */
 .form-field {
   margin-bottom: 30px;

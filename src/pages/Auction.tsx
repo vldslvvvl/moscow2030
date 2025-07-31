@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import Header from "../components/Header";
 import { usePageContext } from "../context/PageContext";
 import WinModal from "../components/WinModal";
@@ -16,6 +16,9 @@ interface Participant {
 const Auction: React.FC = () => {
   const { auctionData } = usePageContext();
   const [timeLeft, setTimeLeft] = useState(30);
+  const isAuctionActiveRef = useRef(true);
+  const alexeyTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const olegTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Функция для расчета изначального бюджета (цена объекта + 30%)
   const calculateInitialBudget = (): number => {
@@ -56,10 +59,22 @@ const Auction: React.FC = () => {
     return userParticipant?.bid || initialBid;
   };
 
-  // Таймер
+  // Основной таймер для обратного отсчета
   useEffect(() => {
     if (timeLeft <= 0) {
       // Аукцион завершен - определяем победителя
+      isAuctionActiveRef.current = false;
+
+      // Очищаем таймеры ботов
+      if (alexeyTimerRef.current) {
+        clearTimeout(alexeyTimerRef.current);
+        alexeyTimerRef.current = null;
+      }
+      if (olegTimerRef.current) {
+        clearTimeout(olegTimerRef.current);
+        olegTimerRef.current = null;
+      }
+
       const userBid = participants.find((p) => p.isUser)?.bid || 0;
       const maxOtherBid = Math.max(
         ...participants.filter((p) => !p.isUser).map((p) => p.bid)
@@ -84,23 +99,107 @@ const Auction: React.FC = () => {
           setIsBlinking(false);
         }
 
-        return newTime;
-      });
+        // Останавливаем аукцион если время закончилось
+        if (newTime <= 0) {
+          isAuctionActiveRef.current = false;
 
-      // Асинхронное увеличение ставок других участников
-      setParticipants((prevParticipants) => {
-        const bidIncrement = auctionData?.type === "parking" ? 50000 : 100000;
-        return prevParticipants.map((participant) => {
-          if (!participant.isUser) {
-            return { ...participant, bid: participant.bid + bidIncrement };
+          // Очищаем таймеры ботов
+          if (alexeyTimerRef.current) {
+            clearTimeout(alexeyTimerRef.current);
+            alexeyTimerRef.current = null;
           }
-          return participant;
-        });
+          if (olegTimerRef.current) {
+            clearTimeout(olegTimerRef.current);
+            olegTimerRef.current = null;
+          }
+        }
+
+        return newTime;
       });
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [timeLeft, auctionData?.type]);
+  }, [timeLeft]);
+
+  // Таймер для бота Алексей
+  useEffect(() => {
+    const getRandomInterval = () => Math.random() * 2000 + 1000; // от 1 до 3 секунд
+
+    const scheduleNextBid = () => {
+      if (!isAuctionActiveRef.current) return;
+
+      alexeyTimerRef.current = setTimeout(() => {
+        // Проверяем, активен ли аукцион
+        if (!isAuctionActiveRef.current) return;
+
+        setParticipants((prev) => {
+          const bidIncrement = auctionData?.type === "parking" ? 50000 : 100000;
+          return prev.map((participant) => {
+            if (participant.id === "alexey") {
+              return { ...participant, bid: participant.bid + bidIncrement };
+            }
+            return participant;
+          });
+        });
+
+        // Планируем следующую ставку
+        scheduleNextBid();
+      }, getRandomInterval());
+    };
+
+    // Начальная задержка для Алексея
+    const initialTimer = setTimeout(() => {
+      scheduleNextBid();
+    }, Math.random() * 1000 + 500); // от 0.5 до 1.5 секунд
+
+    return () => {
+      clearTimeout(initialTimer);
+      if (alexeyTimerRef.current) {
+        clearTimeout(alexeyTimerRef.current);
+        alexeyTimerRef.current = null;
+      }
+    };
+  }, [auctionData?.type]);
+
+  // Таймер для бота Олег
+  useEffect(() => {
+    const getRandomInterval = () => Math.random() * 2000 + 1000; // от 1 до 3 секунд
+
+    const scheduleNextBid = () => {
+      if (!isAuctionActiveRef.current) return;
+
+      olegTimerRef.current = setTimeout(() => {
+        // Проверяем, активен ли аукцион
+        if (!isAuctionActiveRef.current) return;
+
+        setParticipants((prev) => {
+          const bidIncrement = auctionData?.type === "parking" ? 50000 : 100000;
+          return prev.map((participant) => {
+            if (participant.id === "oleg") {
+              return { ...participant, bid: participant.bid + bidIncrement };
+            }
+            return participant;
+          });
+        });
+
+        // Планируем следующую ставку
+        scheduleNextBid();
+      }, getRandomInterval());
+    };
+
+    // Начальная задержка для Олега (другая, чем у Алексея)
+    const initialTimer = setTimeout(() => {
+      scheduleNextBid();
+    }, Math.random() * 1500 + 1000); // от 1 до 2.5 секунд
+
+    return () => {
+      clearTimeout(initialTimer);
+      if (olegTimerRef.current) {
+        clearTimeout(olegTimerRef.current);
+        olegTimerRef.current = null;
+      }
+    };
+  }, [auctionData?.type]);
 
   const handleIncreaseBid = useCallback(() => {
     // Динамическое определение суммы увеличения ставки в зависимости от типа объекта

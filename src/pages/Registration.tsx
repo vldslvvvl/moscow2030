@@ -73,6 +73,9 @@ const Registration: React.FC = () => {
   };
 
   const handleInputClick = () => {
+    // Блокируем клик на инпут, если ЭЦП не получена
+    if (!edsReceived) return;
+
     playButtonSound();
     setIsKeyboardVisible(true);
   };
@@ -141,7 +144,11 @@ const Registration: React.FC = () => {
             </div>
 
             {/* Правая панель - Регистрация */}
-            <div className="registration-panel form-panel">
+            <div
+              className={`registration-panel form-panel ${
+                !edsReceived ? "panel-disabled" : ""
+              }`}
+            >
               <h2 className="panel-title">02. Регистрация</h2>
 
               <div className="form-field">
@@ -158,6 +165,7 @@ const Registration: React.FC = () => {
                   placeholder="Введите ваше имя"
                   autoComplete="off"
                   readOnly
+                  disabled={!edsReceived}
                 />
               </div>
 
@@ -169,7 +177,7 @@ const Registration: React.FC = () => {
               <button
                 className="submit-button"
                 onClick={handleSubmitApplication}
-                disabled={!name.trim() || isLoading}
+                disabled={!name.trim() || isLoading || !edsReceived}
               >
                 {isLoading ? (
                   <>
