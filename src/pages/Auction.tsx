@@ -11,14 +11,11 @@ interface Participant {
   name: string;
   bid: number;
   isUser: boolean;
+  isEliminated: boolean;
 }
 
 const Auction: React.FC = () => {
   const { auctionData } = usePageContext();
-  const [timeLeft, setTimeLeft] = useState(30);
-  const isAuctionActiveRef = useRef(true);
-  const alexeyTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const olegTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Функция для расчета изначального бюджета (цена объекта + 30%)
   const calculateInitialBudget = (): number => {
@@ -36,14 +33,57 @@ const Auction: React.FC = () => {
   const initialBudget = calculateInitialBudget();
   const initialBid = getInitialBid();
 
-  const [isBlinking, setIsBlinking] = useState(false);
+  // Простое состояние игры
+  const [currentRound, setCurrentRound] = useState(1);
+  const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0); // 0 = игрок, 1 = Алексей, 2 = Олег
+  const [gamePhase, setGamePhase] = useState<
+    "playing" | "waiting_for_bot" | "finished"
+  >("playing");
   const [showWinModal, setShowWinModal] = useState(false);
   const [showLoseModal, setShowLoseModal] = useState(false);
 
+  // Ref для предотвращения повторных срабатываний
+  const botTurnInProgress = useRef(false);
+
+  // Случайный выбор бота для первого выбывания
+  const [firstBotToEliminate] = useState<string>(() => {
+    const randomValue = Math.random();
+    const chosen = randomValue < 0.5 ? "alexey" : "oleg";
+    console.log(
+      `🎲 Рандомное значение: ${randomValue.toFixed(3)}, выбран: ${chosen}`
+    );
+    return chosen;
+  });
+
+  // Определяем второго бота и отслеживаем раунд выбывания первого
+  const secondBotToEliminate =
+    firstBotToEliminate === "alexey" ? "oleg" : "alexey";
+  const [firstBotEliminatedRound, setFirstBotEliminatedRound] = useState<
+    number | null
+  >(null);
+
   const [participants, setParticipants] = useState<Participant[]>([
-    { id: "user", name: "Вы", bid: initialBid, isUser: true },
-    { id: "alexey", name: "Алексей", bid: initialBid, isUser: false },
-    { id: "oleg", name: "Олег", bid: initialBid, isUser: false },
+    {
+      id: "user",
+      name: "Вы",
+      bid: initialBid,
+      isUser: true,
+      isEliminated: false,
+    },
+    {
+      id: "alexey",
+      name: "Алексей",
+      bid: initialBid,
+      isUser: false,
+      isEliminated: false,
+    },
+    {
+      id: "oleg",
+      name: "Олег",
+      bid: initialBid,
+      isUser: false,
+      isEliminated: false,
+    },
   ]);
 
   // Функция для расчета остатка бюджета пользователя
@@ -59,172 +99,337 @@ const Auction: React.FC = () => {
     return userParticipant?.bid || initialBid;
   };
 
-  // Основной таймер для обратного отсчета
-  useEffect(() => {
-    if (timeLeft <= 0) {
-      // Аукцион завершен - определяем победителя
-      isAuctionActiveRef.current = false;
+  // Порядок игроков: 0 = игрок, 1 = Алексей, 2 = Олег
+  const playerOrder = [
+    { id: "user", name: "Вы", isUser: true },
+    { id: "alexey", name: "Алексей", isUser: false },
+    { id: "oleg", name: "Олег", isUser: false },
+  ];
 
-      // Очищаем таймеры ботов
-      if (alexeyTimerRef.current) {
-        clearTimeout(alexeyTimerRef.current);
-        alexeyTimerRef.current = null;
+  // Функция для определения шанса выбывания
+  const getEliminationChance = (botId: string, round: number): number => {
+    // Логика для первого бота (выбранного случайно)
+    if (botId === firstBotToEliminate) {
+      switch (round) {
+        case 3:
+          return 10;
+        case 4:
+          return 25;
+        case 5:
+          return 50;
+        case 6:
+          return 85;
+        case 7:
+          return 100;
+        default:
+          return 0; // В раундах 1-2 и после 7 - нет шанса
       }
-      if (olegTimerRef.current) {
-        clearTimeout(olegTimerRef.current);
-        olegTimerRef.current = null;
+    }
+
+    // Логика для второго бота (может выбывать только через 2 раунда после первого)
+    if (botId === secondBotToEliminate) {
+      // Если первый бот еще не выбыл, второй не может выбыть
+      if (firstBotEliminatedRound === null) return 0;
+
+      // Второй бот может начать выбывать только через 2 раунда после первого
+      const minimumRoundForSecond = firstBotEliminatedRound + 2;
+      if (round < minimumRoundForSecond) return 0;
+
+      // Прогрессивные шансы для второго бота после минимального раунда
+      const roundsAfterMinimum = round - minimumRoundForSecond;
+      switch (roundsAfterMinimum) {
+        case 0:
+          return 20; // Первый доступный раунд (через 2 раунда после первого)
+        case 1:
+          return 40; // +1 раунд
+        case 2:
+          return 60; // +2 раунда
+        case 3:
+          return 80; // +3 раунда
+        case 4:
+          return 90; // +4 раунда
+        case 5:
+          return 95; // +5 раундов
+        default:
+          // Для раундов 6+ или если игра идет дольше 10 раундов
+          return round >= 10 ? 100 : 98; // 100% только в последнем раунде
+      }
+    }
+
+    return 0; // Для пользователя или неизвестных ботов
+  };
+
+  // Получаем информацию о текущем игроке
+  const getCurrentPlayer = () => {
+    return playerOrder[currentPlayerIndex];
+  };
+
+  // Переход к следующему ходу (простая логика)
+  const nextTurn = () => {
+    const nextIndex = currentPlayerIndex + 1;
+
+    // Если дошли до конца списка игроков - новый раунд
+    if (nextIndex > 2) {
+      setCurrentRound((prev) => prev + 1);
+      setCurrentPlayerIndex(0);
+      console.log(`🆕 Новый раунд ${currentRound + 1}/10`);
+    } else {
+      // Просто переходим к следующему игроку (не пропускаем никого)
+      setCurrentPlayerIndex(nextIndex);
+    }
+  };
+
+  // Ход бота
+  const makeBotMove = (botId: string, botName: string) => {
+    if (botTurnInProgress.current) return;
+
+    console.log(`🤖 Начинаем ход бота: ${botName}`);
+    botTurnInProgress.current = true;
+    setGamePhase("waiting_for_bot");
+
+    const delay = 1500 + Math.random() * 1000; // 1.5-2.5 секунды
+
+    setTimeout(() => {
+      // Проверяем, выбыл ли уже бот ранее
+      const currentParticipant = participants.find((p) => p.id === botId);
+      if (currentParticipant?.isEliminated) {
+        console.log(`💀 ${botName} уже выбыл - ставка остается без изменений`);
+        console.log(`🎯 Бот ${botName} завершил ход (выбывший)`);
+        botTurnInProgress.current = false;
+        setGamePhase("playing");
+        nextTurn();
+        return;
       }
 
-      const userBid = participants.find((p) => p.isUser)?.bid || 0;
-      const maxOtherBid = Math.max(
-        ...participants.filter((p) => !p.isUser).map((p) => p.bid)
-      );
+      // Проверяем выбывание в начале хода
+      const eliminationChance = getEliminationChance(botId, currentRound);
+      let botWillBeEliminated = false;
 
-      if (userBid > maxOtherBid) {
-        setShowWinModal(true);
+      if (eliminationChance > 0) {
+        console.log(
+          `🎲 Шанс выбывания для ${botName} в раунде ${currentRound}: ${eliminationChance}%`
+        );
+
+        const roll = Math.random() * 100;
+        console.log(
+          `🎯 Бросок кубика для ${botName}: ${roll.toFixed(
+            1
+          )} (нужно < ${eliminationChance})`
+        );
+
+        if (roll < eliminationChance) {
+          console.log(`❌ ${botName} выбывает из игры!`);
+          botWillBeEliminated = true;
+
+          // Отслеживаем выбывание первого бота
+          if (
+            botId === firstBotToEliminate &&
+            firstBotEliminatedRound === null
+          ) {
+            setFirstBotEliminatedRound(currentRound);
+            console.log(
+              `📝 Первый бот (${botName}) выбыл в раунде ${currentRound}`
+            );
+          }
+        } else {
+          console.log(`✅ ${botName} остается в игре`);
+        }
+      }
+
+      // Определяем размер ставки
+      const bidIncrement = botWillBeEliminated
+        ? 0
+        : auctionData?.type === "parking"
+        ? 50000
+        : 100000;
+
+      if (botWillBeEliminated) {
+        console.log(`💀 ${botName} выбывает - ставка не увеличивается`);
       } else {
-        setShowLoseModal(true);
+        console.log(`💰 Бот ${botName} делает ставку!`);
+      }
+
+      // Обновляем состояние участника
+      setParticipants((prev) => {
+        return prev.map((participant) => {
+          if (participant.id === botId) {
+            const newBid = participant.bid + bidIncrement;
+
+            if (botWillBeEliminated) {
+              console.log(
+                `✅ ${botName}: ставка ${participant.bid.toLocaleString(
+                  "ru-RU"
+                )} ₽ (выбыл)`
+              );
+              return { ...participant, isEliminated: true };
+            } else {
+              console.log(
+                `✅ ${botName} увеличил ставку: ${participant.bid.toLocaleString(
+                  "ru-RU"
+                )} → ${newBid.toLocaleString("ru-RU")} ₽`
+              );
+              return { ...participant, bid: newBid };
+            }
+          }
+          return participant;
+        });
+      });
+
+      // Проверяем окончание игры
+      if (botWillBeEliminated) {
+        const remainingBots = participants.filter(
+          (p) => !p.isUser && !p.isEliminated && p.id !== botId
+        );
+        if (remainingBots.length === 0) {
+          console.log("🎉 Все боты выбыли! Игрок победил!");
+          botTurnInProgress.current = false;
+          setGamePhase("finished");
+          setShowWinModal(true);
+          return;
+        }
+      }
+
+      console.log(`🎯 Бот ${botName} завершил ход`);
+      botTurnInProgress.current = false;
+      setGamePhase("playing");
+      nextTurn();
+    }, delay);
+  };
+
+  // Проверяем, нужно ли сделать ход бота
+  useEffect(() => {
+    if (gamePhase !== "playing") return;
+
+    // Проверяем окончание игры по раундам
+    if (currentRound > 10) {
+      setGamePhase("finished");
+      setShowWinModal(true);
+      return;
+    }
+
+    // Проверяем окончание игры по количеству активных игроков
+    const activeParticipants = participants.filter((p) => !p.isEliminated);
+    if (activeParticipants.length <= 1) {
+      console.log("🎉 Игра завершена! Остался только один участник!");
+      setGamePhase("finished");
+      setShowWinModal(true);
+      return;
+    }
+
+    const currentPlayer = getCurrentPlayer();
+    const currentParticipant = participants.find(
+      (p) => p.id === currentPlayer.id
+    );
+
+    console.log(
+      `🎮 Раунд ${currentRound}/10, Ход: ${currentPlayer.name} ${
+        currentPlayer.isUser ? "👤" : "🤖"
+      } ${currentParticipant?.isEliminated ? "❌ (выбыл)" : "✅"}`
+    );
+
+    // Логируем информацию о выбранных ботах для выбывания
+    if (currentRound === 1 && currentPlayerIndex === 0) {
+      console.log(
+        `🎯 Первый бот для выбывания: ${
+          firstBotToEliminate === "alexey" ? "Алексей" : "Олег"
+        }`
+      );
+      console.log(
+        `🎯 Второй бот для выбывания: ${
+          secondBotToEliminate === "alexey" ? "Алексей" : "Олег"
+        }`
+      );
+    }
+
+    // Логируем информацию о выбывании первого бота
+    if (
+      firstBotEliminatedRound !== null &&
+      currentRound === firstBotEliminatedRound + 1 &&
+      currentPlayerIndex === 0
+    ) {
+      console.log(
+        `📅 Первый бот выбыл в раунде ${firstBotEliminatedRound}. Второй бот сможет выбывать с раунда ${
+          firstBotEliminatedRound + 2
+        }`
+      );
+    }
+
+    // Если это ход игрока - ничего не делаем (ждем действия пользователя)
+    if (currentPlayer.isUser) {
+      // Проверяем, что игрок не выбыл (игрок никогда не должен выбывать)
+      if (currentParticipant?.isEliminated) {
+        console.error(
+          "❌ ОШИБКА: Игрок помечен как выбывший! Это не должно происходить."
+        );
       }
       return;
     }
 
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        const newTime = prev - 1;
-
-        // Моргание в последние 5 секунд
-        if (newTime <= 5 && newTime > 0) {
-          setIsBlinking(true);
-        } else {
-          setIsBlinking(false);
-        }
-
-        // Останавливаем аукцион если время закончилось
-        if (newTime <= 0) {
-          isAuctionActiveRef.current = false;
-
-          // Очищаем таймеры ботов
-          if (alexeyTimerRef.current) {
-            clearTimeout(alexeyTimerRef.current);
-            alexeyTimerRef.current = null;
-          }
-          if (olegTimerRef.current) {
-            clearTimeout(olegTimerRef.current);
-            olegTimerRef.current = null;
-          }
-        }
-
-        return newTime;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [timeLeft]);
-
-  // Таймер для бота Алексей
-  useEffect(() => {
-    const getRandomInterval = () => Math.random() * 2000 + 1000; // от 1 до 3 секунд
-
-    const scheduleNextBid = () => {
-      if (!isAuctionActiveRef.current) return;
-
-      alexeyTimerRef.current = setTimeout(() => {
-        // Проверяем, активен ли аукцион
-        if (!isAuctionActiveRef.current) return;
-
-        setParticipants((prev) => {
-          const bidIncrement = auctionData?.type === "parking" ? 50000 : 100000;
-          return prev.map((participant) => {
-            if (participant.id === "alexey") {
-              return { ...participant, bid: participant.bid + bidIncrement };
-            }
-            return participant;
-          });
-        });
-
-        // Планируем следующую ставку
-        scheduleNextBid();
-      }, getRandomInterval());
-    };
-
-    // Начальная задержка для Алексея
-    const initialTimer = setTimeout(() => {
-      scheduleNextBid();
-    }, Math.random() * 1000 + 500); // от 0.5 до 1.5 секунд
-
-    return () => {
-      clearTimeout(initialTimer);
-      if (alexeyTimerRef.current) {
-        clearTimeout(alexeyTimerRef.current);
-        alexeyTimerRef.current = null;
-      }
-    };
-  }, [auctionData?.type]);
-
-  // Таймер для бота Олег
-  useEffect(() => {
-    const getRandomInterval = () => Math.random() * 2000 + 1000; // от 1 до 3 секунд
-
-    const scheduleNextBid = () => {
-      if (!isAuctionActiveRef.current) return;
-
-      olegTimerRef.current = setTimeout(() => {
-        // Проверяем, активен ли аукцион
-        if (!isAuctionActiveRef.current) return;
-
-        setParticipants((prev) => {
-          const bidIncrement = auctionData?.type === "parking" ? 50000 : 100000;
-          return prev.map((participant) => {
-            if (participant.id === "oleg") {
-              return { ...participant, bid: participant.bid + bidIncrement };
-            }
-            return participant;
-          });
-        });
-
-        // Планируем следующую ставку
-        scheduleNextBid();
-      }, getRandomInterval());
-    };
-
-    // Начальная задержка для Олега (другая, чем у Алексея)
-    const initialTimer = setTimeout(() => {
-      scheduleNextBid();
-    }, Math.random() * 1500 + 1000); // от 1 до 2.5 секунд
-
-    return () => {
-      clearTimeout(initialTimer);
-      if (olegTimerRef.current) {
-        clearTimeout(olegTimerRef.current);
-        olegTimerRef.current = null;
-      }
-    };
-  }, [auctionData?.type]);
+    // Если это ход бота - выполняем автоматически (выбывшие делают "ставку +0")
+    if (!botTurnInProgress.current) {
+      makeBotMove(currentPlayer.id, currentPlayer.name);
+    }
+  }, [
+    currentPlayerIndex,
+    currentRound,
+    gamePhase,
+    auctionData?.type,
+    participants,
+    firstBotToEliminate,
+    secondBotToEliminate,
+    firstBotEliminatedRound,
+  ]);
 
   const handleIncreaseBid = useCallback(() => {
-    // Динамическое определение суммы увеличения ставки в зависимости от типа объекта
+    if (gamePhase !== "playing") return;
+
+    const currentPlayer = getCurrentPlayer();
+
+    // Проверяем, что сейчас ход игрока
+    if (!currentPlayer.isUser) {
+      console.log("❌ Сейчас не ход игрока, игнорируем ставку");
+      return;
+    }
+
     const increaseAmount = auctionData?.type === "parking" ? 50000 : 100000;
+    const currentUserBid = participants.find((p) => p.isUser)?.bid || 0;
+    const remainingBudget = initialBudget - currentUserBid;
 
-    setParticipants((prev) => {
-      const currentUserBid = prev.find((p) => p.isUser)?.bid || 0;
-      const remainingBudget = initialBudget - currentUserBid;
+    if (remainingBudget < increaseAmount) {
+      console.log("❌ Недостаточно бюджета для ставки");
+      return;
+    }
 
-      if (remainingBudget >= increaseAmount) {
-        return prev.map((p) =>
-          p.isUser ? { ...p, bid: p.bid + increaseAmount } : p
-        );
-      }
+    console.log(
+      `👤 Игрок делает ставку: ${currentUserBid.toLocaleString("ru-RU")} → ${(
+        currentUserBid + increaseAmount
+      ).toLocaleString("ru-RU")} ₽`
+    );
 
-      return prev; // Не изменяем состояние если недостаточно бюджета
-    });
-  }, [initialBudget, auctionData?.type]);
+    // Увеличиваем ставку игрока
+    setParticipants((prev) =>
+      prev.map((p) => (p.isUser ? { ...p, bid: p.bid + increaseAmount } : p))
+    );
 
-  const formatTime = (seconds: number): string => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, "0")}:${secs
-      .toString()
-      .padStart(2, "0")}`;
+    // Переходим к следующему ходу
+    console.log("✅ Игрок завершил ход, переходим к следующему");
+    nextTurn();
+  }, [
+    gamePhase,
+    auctionData?.type,
+    initialBudget,
+    participants,
+    currentPlayerIndex,
+  ]);
+
+  // Получаем информацию о текущем игроке (новая логика)
+  const getCurrentPlayerInfo = () => {
+    const currentPlayer = getCurrentPlayer();
+    return {
+      currentPlayer,
+      isUserTurn: currentPlayer.isUser,
+      activeParticipants: participants.filter((p) => !p.isEliminated),
+    };
   };
 
   const formatCurrency = (amount: number): string => {
@@ -233,15 +438,23 @@ const Auction: React.FC = () => {
 
   // Находим максимальную ставку для нормализации высоты баров
   const maxBid = Math.max(...participants.map((p) => p.bid));
+  const { currentPlayer, isUserTurn } = getCurrentPlayerInfo();
 
   return (
     <div className="auction-page">
       <Header />
       <main className="auction-content">
         <div className="auction-container">
-          {/* Таймер */}
-          <div className={`auction-timer ${isBlinking ? "blinking" : ""}`}>
-            {formatTime(timeLeft)}
+          {/* Информация о раунде и ходе */}
+          <div className="auction-timer">Раунд {currentRound}/10</div>
+          <div className="turn-info">
+            {gamePhase === "finished"
+              ? "Игра завершена"
+              : gamePhase === "waiting_for_bot"
+              ? `Ход бота...`
+              : isUserTurn
+              ? "Ваш ход"
+              : `Ход: ${currentPlayer?.name || ""}`}
           </div>
 
           {/* Информация о лоте */}
@@ -271,7 +484,13 @@ const Auction: React.FC = () => {
           </div>
 
           {/* Кнопка увеличения ставки */}
-          <button className={`increase-bid-button`} onClick={handleIncreaseBid}>
+          <button
+            className={`increase-bid-button ${
+              !isUserTurn || gamePhase !== "playing" ? "disabled" : ""
+            }`}
+            onClick={handleIncreaseBid}
+            disabled={!isUserTurn || gamePhase !== "playing"}
+          >
             <svg
               width="20"
               height="20"

@@ -265,4 +265,22 @@
   .participant-name {
     font-size: 14px;
   }
+}
+
+/* Стили для выбывших ботов */
+.eliminated-bar {
+  opacity: 0.3;
+  filter: grayscale(70%);
+  transition: opacity 0.5s ease, filter 0.5s ease;
+}
+
+.eliminated-bar .bar-face {
+  opacity: 0.5;
+}
+
+.eliminated-name {
+  opacity: 0.5;
+  color: #888888 !important;
+  text-decoration: line-through;
+  transition: opacity 0.5s ease, color 0.5s ease;
 } 

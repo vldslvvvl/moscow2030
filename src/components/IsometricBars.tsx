@@ -6,6 +6,7 @@ interface Participant {
   name: string;
   bid: number;
   isUser: boolean;
+  isEliminated: boolean;
 }
 
 interface IsometricBarsProps {
@@ -21,10 +22,11 @@ const IsometricBars: React.FC<IsometricBarsProps> = ({
     return amount.toLocaleString("ru-RU");
   };
 
-  // Определяем побеждающего участника (с максимальной ставкой)
+  // Определяем побеждающего участника (с максимальной ставкой среди активных)
   const getWinningParticipant = (): Participant | null => {
-    if (participants.length === 0) return null;
-    return participants.reduce((winner, current) =>
+    const activeParticipants = participants.filter((p) => !p.isEliminated);
+    if (activeParticipants.length === 0) return null;
+    return activeParticipants.reduce((winner, current) =>
       current.bid > winner.bid ? current : winner
     );
   };
@@ -44,7 +46,7 @@ const IsometricBars: React.FC<IsometricBarsProps> = ({
 
       {/* Изометрические бары */}
       <div className="bars-wrapper">
-        {participants.map((participant, index) => {
+        {participants.map((participant) => {
           const height = (participant.bid / maxBid) * 100; // Процент от максимальной высоты
           const isWinning =
             winningParticipant && participant.id === winningParticipant.id;
@@ -67,7 +69,9 @@ const IsometricBars: React.FC<IsometricBarsProps> = ({
               <div
                 className={`isometric-bar ${
                   participant.isUser ? "user-bar" : "other-bar"
-                } ${isWinning ? "winning-bar" : ""}`}
+                } ${isWinning ? "winning-bar" : ""} ${
+                  participant.isEliminated ? "eliminated-bar" : ""
+                }`}
               >
                 {/* Передняя грань */}
                 <div className="bar-face front"></div>
@@ -88,7 +92,7 @@ const IsometricBars: React.FC<IsometricBarsProps> = ({
             key={participant.id}
             className={`participant-name ${
               participant.isUser ? "user-name" : "other-name"
-            }`}
+            } ${participant.isEliminated ? "eliminated-name" : ""}`}
           >
             {participant.name}
           </div>

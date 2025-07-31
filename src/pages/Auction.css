@@ -59,6 +59,20 @@
   }
 }
 
+/* Информация о ходе */
+.turn-info {
+  font-size: 24px;
+  font-weight: 500;
+  color: #FFFFFF;
+  font-family: 'Montserrat', sans-serif;
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 12px 24px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
 /* Информация о лоте */
 .lot-info {
   text-align: center;
@@ -164,7 +178,8 @@
   box-shadow: 0 8px 25px rgba(0, 202, 241, 0.4);
 }
 
-.increase-bid-button:disabled {
+.increase-bid-button:disabled,
+.increase-bid-button.disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
