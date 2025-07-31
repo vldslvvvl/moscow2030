@@ -438,7 +438,7 @@ const Auction: React.FC = () => {
 
   // Находим максимальную ставку для нормализации высоты баров
   const maxBid = Math.max(...participants.map((p) => p.bid));
-  const { currentPlayer, isUserTurn } = getCurrentPlayerInfo();
+  const { isUserTurn } = getCurrentPlayerInfo();
 
   return (
     <div className="auction-page">
@@ -446,17 +446,7 @@ const Auction: React.FC = () => {
       <main className="auction-content">
         <div className="auction-container">
           {/* Информация о раунде и ходе */}
-          <div className="auction-timer">Раунд {currentRound}/10</div>
-          <div className="turn-info">
-            {gamePhase === "finished"
-              ? "Игра завершена"
-              : gamePhase === "waiting_for_bot"
-              ? `Ход бота...`
-              : isUserTurn
-              ? "Ваш ход"
-              : `Ход: ${currentPlayer?.name || ""}`}
-          </div>
-
+          <div className="auction-timer">Раунд {currentRound}</div>
           {/* Информация о лоте */}
           <div className="lot-info">
             <h1 className="lot-title">{auctionData?.title || "Загрузка..."}</h1>
