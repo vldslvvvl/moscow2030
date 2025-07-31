@@ -6,6 +6,7 @@ import React, {
   useCallback,
   useMemo,
 } from "react";
+import { useIdleTimer } from "../hooks/useIdleTimer";
 
 export type PageType =
   | "start"
@@ -73,6 +74,23 @@ export const PageProvider: React.FC<PageProviderProps> = ({ children }) => {
   const navigateTo = useCallback((page: PageType) => {
     setCurrentPage(page);
   }, []);
+
+  // Константа для таймаута бездействия
+  const IDLE_TIMEOUT = 1 * 60 * 1000; // 120000 мс
+
+  // Обработчик бездействия - возврат на главную страницу
+  const handleIdle = useCallback(() => {
+    console.log("Пользователь неактивен более 2 минут, возврат на главную");
+    setCurrentPage("start");
+  }, []);
+
+  // Инициализация таймера бездействия
+  // Отключаем таймер когда пользователь уже на главной странице
+  useIdleTimer({
+    timeout: IDLE_TIMEOUT,
+    onIdle: handleIdle,
+    disabled: currentPage === "start", // отключаем на главной странице и на аукционе
+  });
 
   const contextValue = useMemo(
     () => ({

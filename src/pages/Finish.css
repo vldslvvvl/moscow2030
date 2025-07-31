@@ -94,6 +94,15 @@
     0 0 80px rgba(193, 119, 255, 0.3);
 }
 
+/* Контейнер кнопок */
+.buttons-container {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
 /* Кнопка возврата */
 .return-button {
   background: transparent;
@@ -107,13 +116,36 @@
   transition: all 0.3s ease;
   text-transform: uppercase;
   font-family: 'Montserrat', sans-serif;
-  min-width: 300px;
+  min-width: 280px;
 }
 
 .return-button:hover {
   background: rgba(0, 202, 241, 0.1);
   border-color: #C177FF;
   box-shadow: 0 0 20px rgba(0, 202, 241, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Кнопка на главную */
+.home-button {
+  background: transparent;
+  border: 1px solid #C177FF;
+  border-radius: 120px;
+  padding: 20px 40px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  font-family: 'Montserrat', sans-serif;
+  min-width: 280px;
+}
+
+.home-button:hover {
+  background: rgba(193, 119, 255, 0.1);
+  border-color: #00CAF1;
+  box-shadow: 0 0 20px rgba(193, 119, 255, 0.3);
   transform: translateY(-2px);
 }
 
@@ -294,7 +326,19 @@
     height: 250px;
   }
 
+  .buttons-container {
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+  }
+
   .return-button {
+    padding: 16px 24px;
+    font-size: 16px;
+    min-width: 250px;
+  }
+
+  .home-button {
     padding: 16px 24px;
     font-size: 16px;
     min-width: 250px;

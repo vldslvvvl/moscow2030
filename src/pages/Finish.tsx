@@ -16,6 +16,12 @@ const Finish: React.FC = () => {
     navigateTo("listing");
   };
 
+  const handleGoToHome = () => {
+    console.log("Переход на главную");
+    playButtonSound();
+    navigateTo("start");
+  };
+
   const handleBackClick = useCallback(() => {
     navigateTo("docs");
   }, [navigateTo]);
@@ -39,9 +45,14 @@ const Finish: React.FC = () => {
             <img src={qrImage} alt="QR код" className="qr-code" />
           </div>
 
-          <button className="return-button" onClick={handleReturnToCatalog}>
-            ВЕРНУТЬСЯ В КАТАЛОГ
-          </button>
+          <div className="buttons-container">
+            <button className="home-button" onClick={handleGoToHome}>
+              НА ГЛАВНУЮ
+            </button>
+            <button className="return-button" onClick={handleReturnToCatalog}>
+              ВЕРНУТЬСЯ В КАТАЛОГ
+            </button>
+          </div>
         </div>
       </main>
       <div className="background-image">
